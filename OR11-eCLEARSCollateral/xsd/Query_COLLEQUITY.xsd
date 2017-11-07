@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/db/Query_COLLEQUITY" xmlns="http://xmlns.oracle.com/pcbpel/adapter/db/Query_COLLEQUITY" elementFormDefault="qualified" attributeFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:element name="Query_COLLEQUITYInput" type="Query_COLLEQUITYInput"/>
+   <xs:complexType name="Query_COLLEQUITYInput">
+      <xs:sequence>
+         <xs:element name="lownum" type="xs:decimal" nillable="true"/>
+         <xs:element name="hinum" type="xs:decimal" nillable="true"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="Query_COLLEQUITYOutputCollection" type="Query_COLLEQUITYOutputCollection"/>
+   <xs:complexType name="Query_COLLEQUITYOutputCollection">
+      <xs:sequence>
+         <xs:element name="Query_COLLEQUITYOutput" type="Query_COLLEQUITYOutput" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="Query_COLLEQUITYOutput">
+      <xs:sequence>
+         <xs:element name="ROWNUM" type="xs:decimal" nillable="true"/>
+         <xs:element name="HEADERID" type="xs:string" nillable="true"/>
+         <xs:element name="ASAT" type="xs:string" nillable="true"/>
+         <xs:element name="SOURCESYSTEM" type="xs:string" nillable="true"/>
+         <xs:element name="DEALID" type="xs:string" nillable="true"/>
+         <xs:element name="DEALTYPE" type="xs:string" nillable="true"/>
+         <xs:element name="DEALDATE" type="xs:string" nillable="true"/>
+         <xs:element name="DSTATUS" type="xs:string" nillable="true"/>
+         <xs:element name="TRADEID" type="xs:string" nillable="true"/>
+         <xs:element name="TRADEDATE" type="xs:string" nillable="true"/>
+         <xs:element name="TRADETYPE" type="xs:string" nillable="true"/>
+         <xs:element name="COUNTERPARTY" type="xs:string" nillable="true"/>
+         <xs:element name="INTERNALUNIT" type="xs:string" nillable="true"/>
+         <xs:element name="BUYSELL" type="xs:string" nillable="true"/>
+         <xs:element name="TSTATUS" type="xs:string" nillable="true"/>
+         <xs:element name="INSTRUMENTID" type="xs:string" nillable="true"/>
+         <xs:element name="NUMBERSHARES" type="xs:decimal" nillable="true"/>
+         <xs:element name="EXCHANGECODE" type="xs:string" nillable="true"/>
+         <xs:element name="CURRENCY" type="xs:string" nillable="true"/>
+         <xs:element name="PAYMENTTYPE" type="xs:string" nillable="true"/>
+         <xs:element name="PAYCURRENCY" type="xs:string" nillable="true"/>
+         <xs:element name="PAYAMOUNT" type="xs:decimal" nillable="true"/>
+         <xs:element name="PAYMENTDATE" type="xs:string" nillable="true"/>
+         <xs:element name="EXTACC" type="xs:string" nillable="true"/>
+         <xs:element name="EXTACCVAL" type="xs:string" nillable="true"/>
+         <xs:element name="EXTMRKT" type="xs:string" nillable="true"/>
+         <xs:element name="VALMRKT" type="xs:string" nillable="true"/>
+      </xs:sequence>
+   </xs:complexType>
+</xs:schema>

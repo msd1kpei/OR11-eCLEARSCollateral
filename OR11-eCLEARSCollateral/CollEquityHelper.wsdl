@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions name="CollEquityHelper" targetNamespace="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollEquityHelper" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:client="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollEquityHelper" xmlns:ns1="http://www.kpei.co.id/razor/trigger/e-CLEARSCollateral" xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/">
+   <wsdl:types>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema">
+         <import namespace="http://www.kpei.co.id/razor/trigger/e-CLEARSCollateral" schemaLocation="xsd/CollateralInterface.xsd"/>
+      </schema>
+   </wsdl:types>
+   <wsdl:message name="CollEquityHelperRequestMessage">
+      <wsdl:part name="payload" element="ns1:TriggerElement"/>
+   </wsdl:message>
+   <wsdl:portType name="CollEquityHelper">
+      <wsdl:operation name="process">
+         <wsdl:input message="client:CollEquityHelperRequestMessage"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <plnk:partnerLinkType name="CollEquityHelper">
+      <plnk:role name="CollEquityHelperProvider">
+         <plnk:portType name="client:CollEquityHelper"/>
+      </plnk:role>
+   </plnk:partnerLinkType>
+</wsdl:definitions>

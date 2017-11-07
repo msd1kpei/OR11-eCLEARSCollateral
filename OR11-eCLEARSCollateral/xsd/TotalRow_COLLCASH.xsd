@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/db/TotalRow_COLLCASH" xmlns="http://xmlns.oracle.com/pcbpel/adapter/db/TotalRow_COLLCASH" elementFormDefault="qualified" attributeFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:element name="TotalRow_COLLCASHInput" type="TotalRow_COLLCASHInput"/>
+   <xs:complexType name="TotalRow_COLLCASHInput">
+      <xs:sequence/>
+   </xs:complexType>
+   <xs:element name="TotalRow_COLLCASHOutput" type="TotalRow_COLLCASHOutput"/>
+   <xs:complexType name="TotalRow_COLLCASHOutput">
+      <xs:sequence>
+         <xs:element name="id_mem_capco" type="xs:decimal" nillable="true"/>
+      </xs:sequence>
+   </xs:complexType>
+</xs:schema>

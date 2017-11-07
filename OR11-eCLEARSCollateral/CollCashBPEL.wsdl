@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions name="CollCashBPEL" targetNamespace="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashBPEL" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:client="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashBPEL" xmlns:ns1="http://www.kpei.co.id/razor/trigger/e-CLEARSCollateral" xmlns:ns2="http://xmlns.oracle.com/pcbpel/adapter/db/COLLCASH" xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/">
+   <wsdl:types>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema">
+         <import namespace="http://www.kpei.co.id/razor/trigger/e-CLEARSCollateral" schemaLocation="xsd/CollateralInterface.xsd"/>
+      </schema>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema">
+         <import namespace="http://xmlns.oracle.com/pcbpel/adapter/db/COLLCASH" schemaLocation="xsd/Query_COLLCASH.xsd"/>
+      </schema>
+   </wsdl:types>
+   <wsdl:message name="CollCashBPELRequestMessage">
+      <wsdl:part name="payload" element="ns1:TriggerElement"/>
+   </wsdl:message>
+   <wsdl:message name="CollCashBPELResponseMessage">
+      <wsdl:part name="payload" element="ns2:COLLCASHOutputCollection"/>
+   </wsdl:message>
+   <wsdl:portType name="CollCashBPEL">
+      <wsdl:operation name="process">
+         <wsdl:input message="client:CollCashBPELRequestMessage"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:portType name="CollCashBPELCallback">
+      <wsdl:operation name="processResponse">
+         <wsdl:input message="client:CollCashBPELResponseMessage"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <plnk:partnerLinkType name="CollCashBPEL">
+      <plnk:role name="CollCashBPELProvider">
+         <plnk:portType name="client:CollCashBPEL"/>
+      </plnk:role>
+      <plnk:role name="CollCashBPELRequester">
+         <plnk:portType name="client:CollCashBPELCallback"/>
+      </plnk:role>
+   </plnk:partnerLinkType>
+</wsdl:definitions>

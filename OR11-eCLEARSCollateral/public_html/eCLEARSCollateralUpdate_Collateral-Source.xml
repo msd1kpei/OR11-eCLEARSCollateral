@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Collateral xmlns="http://www.kpei.co.id/schema/OnlineCollateral.001">
+   <header id="id1">
+      <asAt>2010-06-16T10:59:04.215</asAt>
+      <source>source2</source>
+   </header>
+   <collateralType>collateralType3</collateralType>
+   <messageType>messageType4</messageType>
+   <body>
+      <content>
+         <scheme>scheme5</scheme>
+         <deal>
+            <dealHeader>
+               <dealId>dealId6</dealId>
+               <dealDate>dealDate7</dealDate>
+            </dealHeader>
+            <trade>
+               <tradeHeader>
+                  <tradeId>tradeId8</tradeId>
+                  <tradeDate>tradeDate9</tradeDate>
+                  <tradeType>tradeType10</tradeType>
+                  <counterparty>counterparty11</counterparty>
+               </tradeHeader>
+               <product/>
+            </trade>
+         </deal>
+         <deal>
+            <dealHeader>
+               <dealId>dealId12</dealId>
+               <dealDate>dealDate13</dealDate>
+            </dealHeader>
+            <trade>
+               <tradeHeader>
+                  <tradeId>tradeId14</tradeId>
+                  <tradeDate>tradeDate15</tradeDate>
+                  <tradeType>tradeType16</tradeType>
+                  <counterparty>counterparty17</counterparty>
+               </tradeHeader>
+               <product/>
+            </trade>
+         </deal>
+         <deal>
+            <dealHeader>
+               <dealId>dealId18</dealId>
+               <dealDate>dealDate19</dealDate>
+            </dealHeader>
+            <trade>
+               <tradeHeader>
+                  <tradeId>tradeId20</tradeId>
+                  <tradeDate>tradeDate21</tradeDate>
+                  <tradeType>tradeType22</tradeType>
+                  <counterparty>counterparty23</counterparty>
+               </tradeHeader>
+               <product/>
+            </trade>
+         </deal>
+      </content>
+   </body>
+   <ext>
+      <value id="id24">string25</value>
+      <value id="id26">string27</value>
+      <value id="id28">string29</value>
+   </ext>
+</Collateral>

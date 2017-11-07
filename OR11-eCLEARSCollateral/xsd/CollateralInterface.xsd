@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.kpei.co.id/razor/trigger/e-CLEARSCollateral" targetNamespace="http://www.kpei.co.id/razor/trigger/e-CLEARSCollateral" elementFormDefault="qualified">
+   <xsd:element name="TriggerElement">
+      <xsd:annotation>
+         <xsd:documentation>
+        A sample element
+      </xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="header" type="middlewareHeader"/>
+            <xsd:element name="collateralType" type="xsd:string">
+               <xsd:annotation>
+                  <xsd:documentation>CollateralDeposit
+CollateralWithdrawal
+CollateralBuyW
+
+            </xsd:documentation>
+               </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="messageType" type="xsd:string">
+               <xsd:annotation>
+                  <xsd:documentation>
+              COLLCASH, COLLCASHNONIDR, COLLEQ, COLLBOND
+            </xsd:documentation>
+               </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="numberOfBAtch" type="xsd:decimal"/>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="middlewareHeader">
+      <xsd:annotation>
+         <xsd:documentation>Standard Middleware Header</xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="asAt" type="xsd:dateTime">
+            <xsd:annotation>
+               <xsd:documentation>timestamp; ex. 2010-01-01T01:01:01 </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="source" type="xsd:string">
+            <xsd:annotation>
+               <xsd:documentation>source system; ex. Datafeed</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:string">
+         <xsd:annotation>
+            <xsd:documentation>id for distinguish between message; can be sequence or filename_yyyymmddh24miss</xsd:documentation>
+         </xsd:annotation>
+      </xsd:attribute>
+   </xsd:complexType>
+</xsd:schema>

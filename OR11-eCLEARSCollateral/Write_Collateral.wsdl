@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions name="Write-Collateral" targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/file/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Write_Collateral" xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/file/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Write_Collateral" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:imp1="http://www.kpei.co.id/razor/e-CLEARSCollateral" xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/">
+   <plt:partnerLinkType name="Write_Collateral_to_local_plt">
+      <plt:role name="Write-Collateral-to-local_role">
+         <plt:portType name="tns:Write_Collateral_to_local_ptt"/>
+      </plt:role>
+   </plt:partnerLinkType>
+   <wsdl:types>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema">
+         <import namespace="http://www.kpei.co.id/razor/e-CLEARSCollateral" schemaLocation="xsd/e-CLEARSCollateral-response.xsd"/>
+      </schema>
+   </wsdl:types>
+   <wsdl:message name="Write-Collateral-to-local_msg">
+      <wsdl:part name="body" element="imp1:kpeiInbound"/>
+   </wsdl:message>
+   <wsdl:portType name="Write_Collateral_to_local_ptt">
+      <wsdl:operation name="Write-Collateral-to-local">
+         <wsdl:input message="tns:Write-Collateral-to-local_msg"/>
+      </wsdl:operation>
+   </wsdl:portType>
+</wsdl:definitions>

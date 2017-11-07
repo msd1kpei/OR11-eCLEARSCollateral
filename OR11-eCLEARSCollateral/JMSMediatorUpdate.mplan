@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Mediator name="JMSMediatorUpdate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.oracle.com/sca/1.0/mediator" wsdlTargetNamespace="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/OR16_eCLEARSCollateral_JMS">
+   <operation name="eCLEARSCollateral_consume" deliveryPolicy="AllOrNothing" priority="4" validateSchema="false">
+      <switch>
+         <case executionType="direct" name="CollateralProcessingBPEL.OR11-eCLEARSCollateral.sendCollateral">
+            <action>
+               <transform>
+                  <part name="$out.request" function="xslt(xsl/eCLEARSCollateralUpdate_Collateral.xsl, $in.body)"/>
+               </transform>
+               <invoke reference="CollateralProcessingBPEL.OR11-eCLEARSCollateral" operation="sendCollateral">
+                  <onReply>
+                     <transform>
+                        <part name="$out.body" function="xslt(xsl/wsReply_To_wsReply.xsl, $in.reply)"/>
+                     </transform>
+                     <forward reference="eCLEARSCollateralUpdate_response" operation="eCLEARSCollateralUpdateProduce"/>
+                  </onReply>
+               </invoke>
+            </action>
+         </case>
+      </switch>
+   </operation>
+</Mediator>

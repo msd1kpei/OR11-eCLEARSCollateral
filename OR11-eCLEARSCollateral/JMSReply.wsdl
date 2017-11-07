@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions name="JMSReply" targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/JMSReply" xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/JMSReply" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:imp1="http://kpei.co.id/MDwsReply.xsd" xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/">
+   <plt:partnerLinkType name="Produce_eCLEARSCollateralQueue_plt">
+      <plt:role name="Produce_eCLEARSCollateralQueue_role">
+         <plt:portType name="tns:Produce_eCLEARSCollateralQueue_ptt"/>
+      </plt:role>
+   </plt:partnerLinkType>
+   <wsdl:types>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema">
+         <import namespace="http://kpei.co.id/MDwsReply.xsd" schemaLocation="xsd/MDwsReply.xsd"/>
+      </schema>
+   </wsdl:types>
+   <wsdl:message name="Produce_eCLEARSCollateralQueue_msg">
+      <wsdl:part name="body" element="imp1:wsReply"/>
+   </wsdl:message>
+   <wsdl:portType name="Produce_eCLEARSCollateralQueue_ptt">
+      <wsdl:operation name="Produce_eCLEARSCollateralQueue">
+         <wsdl:input message="tns:Produce_eCLEARSCollateralQueue_msg"/>
+      </wsdl:operation>
+   </wsdl:portType>
+</wsdl:definitions>

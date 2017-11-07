@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<inp1:Collateral xmlns:inp1="http://www.kpei.co.id/schema/OnlineCollateral.001">
+   <inp1:header id="id1">
+      <inp1:asAt>2010-05-17T14:29:33.715</inp1:asAt>
+      <inp1:source>source2</inp1:source>
+   </inp1:header>
+   <inp1:collateralType>collateralType3</inp1:collateralType>
+   <inp1:messageType>messageType4</inp1:messageType>
+   <inp1:body>
+      <inp1:content>
+         <inp1:deal>
+            <inp1:dealHeader>
+               <inp1:dealId/>
+               <inp1:dealDate/>
+            </inp1:dealHeader>
+            <inp1:trade>
+               <inp1:tradeHeader>
+                  <inp1:tradeId/>
+                  <inp1:tradeDate/>
+                  <inp1:tradeType/>
+                  <inp1:counterparty/>
+               </inp1:tradeHeader>
+               <inp1:product>
+                  <inp1:cashPayment>
+                     <inp1:paymentDate/>
+                     <inp1:amount ccy="IDR"/>
+                  </inp1:cashPayment>
+                  <inp1:equity>
+                     <inp1:instrumentId/>
+                     <inp1:numberShares/>
+                     <inp1:currency/>
+                     <inp1:paymentAmount>
+                        <inp1:paymentType/>
+                        <inp1:paymentAmount>
+                           <inp1:currency/>
+                           <inp1:amount/>
+                        </inp1:paymentAmount>
+                        <inp1:adjustedPaymentDate/>
+                     </inp1:paymentAmount>
+                  </inp1:equity>
+               </inp1:product>
+               <inp1:extensions>
+                  <inp1:extension>
+                     <inp1:name/>
+                     <inp1:value/>
+                  </inp1:extension>
+               </inp1:extensions>
+            </inp1:trade>
+         </inp1:deal>
+      </inp1:content>
+   </inp1:body>
+</inp1:Collateral>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process name="CollCashBPEL" targetNamespace="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashBPEL" xmlns="http://schemas.xmlsoap.org/ws/2003/03/business-process/" xmlns:client="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashBPEL" xmlns:ora="http://schemas.oracle.com/xpath/extension" xmlns:bpelx="http://schemas.oracle.com/bpel/extension" xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/" xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Rownum_CollEquity" xmlns:ns2="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/TotalRow_COLLCASH" xmlns:ns3="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Query_COLLCASH" xmlns:ns4="http://xmlns.oracle.com/pcbpel/adapter/db/COLLCASH" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns5="http://xmlns.oracle.com/pcbpel/adapter/db/TotalRow_COLLCASH" xmlns:xpath20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20" xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc" xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue" xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk" xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions" xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap" xmlns:mhdr="http://www.oracle.com/XSL/Transform/java/oracle.tip.mediator.service.common.functions.MediatorExtnFunction" xmlns:hwf="http://xmlns.oracle.com/bpel/workflow/xpath" xmlns:med="http://schemas.oracle.com/mediator/xpath" xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath" xmlns:socket="http://www.oracle.com/XSL/Transform/java/oracle.tip.adapter.socket.ProtocolTranslator" xmlns:ns6="http://www.kpei.co.id/razor/trigger/e-CLEARSCollateral" id="BpPrc0">
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      PARTNERLINKS                                                      
+      List of services participating in this BPEL process               
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  --> 
+  <partnerLinks>
+    <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+    <partnerLink name="collcashbpel_client" partnerLinkType="client:CollCashBPEL" myRole="CollCashBPELProvider" partnerRole="CollCashBPELRequester"/>
+    <partnerLink name="TotalRow_COLLCASH" partnerRole="TotalRow_COLLCASH_role" partnerLinkType="ns2:TotalRow_COLLCASH_plt"/>
+    <partnerLink name="Query_COLLCASH" partnerRole="Query_COLLCASH_role" partnerLinkType="ns3:Query_COLLCASH_plt"/>
+  </partnerLinks>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      VARIABLES                                                        
+      List of messages and XML documents used within this BPEL process 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <variables>
+    <!-- Reference to the message passed as input during initiation -->
+    <variable name="inputVariable" messageType="client:CollCashBPELRequestMessage"/>
+
+    <!-- Reference to the message that will be returned to the requester-->
+    <variable name="outputVariable" messageType="client:CollCashBPELResponseMessage"/>
+    <variable name="temp_collCash" element="ns4:COLLCASHOutputCollection"/>
+    <variable name="totalRow" type="xsd:decimal"/>
+    <variable name="TotalRow_TotalRow_COLLCASH_InputVariable" messageType="ns2:TotalRow_COLLCASHInput_msg"/>
+    <variable name="TotalRow_TotalRow_COLLCASH_OutputVariable" messageType="ns2:TotalRow_COLLCASHOutput_msg"/>
+    <variable name="lowNum" type="xsd:decimal"/>
+    <variable name="hinum" type="xsd:decimal"/>
+    <variable name="Query_lownum_hinum_Query_COLLCASH_InputVariable" messageType="ns3:COLLCASHInput_msg"/>
+    <variable name="Query_lownum_hinum_Query_COLLCASH_OutputVariable" messageType="ns3:COLLCASHOutputCollection_msg"/>
+  </variables>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ORCHESTRATION LOGIC                                               
+     Set of activities coordinating the flow of messages across the    
+     services integrated within this business process                  
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <sequence name="main" id="BpSeq0">
+
+    <!-- Receive input from requestor. (Note: This maps to operation defined in CollCashBPEL.wsdl) -->
+    <receive name="receiveInput" partnerLink="collcashbpel_client" portType="client:CollCashBPEL" operation="process" variable="inputVariable" createInstance="yes" id="BpRcv0"/>
+
+    <!-- Generate reply to synchronous request -->
+    <sequence name="get_Total_Row" id="BpSeq1">
+      <invoke name="TotalRow" inputVariable="TotalRow_TotalRow_COLLCASH_InputVariable" outputVariable="TotalRow_TotalRow_COLLCASH_OutputVariable" portType="ns2:TotalRow_COLLCASH_ptt" partnerLink="TotalRow_COLLCASH" operation="TotalRow_COLLCASH" id="BpInv0"/>
+      <assign name="a_totalRow" id="BpAss0">
+        <copy>
+          <from variable="TotalRow_TotalRow_COLLCASH_OutputVariable" part="TotalRow_COLLCASHOutput" query="/ns5:TotalRow_COLLCASHOutput/ns5:id_mem_capco"/>
+          <to variable="totalRow"/>
+        </copy>
+      </assign>
+    </sequence>
+    <assign name="insialisasi" id="BpAss1">
+      <copy>
+        <from expression="1"/>
+        <to variable="lowNum"/>
+      </copy>
+      <copy>
+        <from variable="inputVariable" part="payload" query="/ns6:TriggerElement/ns6:numberOfBAtch"/>
+        <to variable="hinum"/>
+      </copy>
+    </assign>
+    <while name="While_1" condition="number(bpws:getVariableData('lowNum')) &lt;= number(bpws:getVariableData('totalRow'))" id="BpWhl0">
+      <sequence id="BpSeq2">
+        <assign name="a_query" id="BpAss2">
+          <copy>
+            <from variable="lowNum"/>
+            <to variable="Query_lownum_hinum_Query_COLLCASH_InputVariable" part="COLLCASHInput_msg" query="/ns4:COLLCASHInput/ns4:lownum"/>
+          </copy>
+          <copy>
+            <from variable="hinum"/>
+            <to variable="Query_lownum_hinum_Query_COLLCASH_InputVariable" part="COLLCASHInput_msg" query="/ns4:COLLCASHInput/ns4:hinum"/>
+          </copy>
+        </assign>
+        <invoke name="Query_lownum_hinum" inputVariable="Query_lownum_hinum_Query_COLLCASH_InputVariable" outputVariable="Query_lownum_hinum_Query_COLLCASH_OutputVariable" portType="ns3:Query_COLLCASH_ptt" partnerLink="Query_COLLCASH" operation="Query_COLLCASH" id="BpInv1"/>
+        <assign name="a_merging" id="BpAss3">
+          <bpelx:annotation>
+            <bpelx:pattern>transformation</bpelx:pattern>
+          </bpelx:annotation>
+          <copy>
+            <from expression="ora:doXSLTransformForDoc('xsl/merge_collCash.xsl',bpws:getVariableData('temp_collCash'),'Query_lownum_hinum_Query_COLLCASH_OutputVariable.COLLCASHOutputCollection',bpws:getVariableData('Query_lownum_hinum_Query_COLLCASH_OutputVariable','COLLCASHOutputCollection'))"/>
+            <to variable="temp_collCash"/>
+          </copy>
+        </assign>
+        <assign name="counting" id="BpAss4">
+          <copy>
+            <from expression="number(bpws:getVariableData('lowNum')) + number(bpws:getVariableData('inputVariable','payload','/ns6:TriggerElement/ns6:numberOfBAtch'))"/>
+            <to variable="lowNum"/>
+          </copy>
+          <copy>
+            <from expression="number(bpws:getVariableData('hinum')) + number(bpws:getVariableData('inputVariable','payload','/ns6:TriggerElement/ns6:numberOfBAtch'))"/>
+            <to variable="hinum"/>
+          </copy>
+        </assign>
+      </sequence>
+    </while>
+    <assign name="copyOutput" id="BpAss5">
+      <copy>
+        <from variable="temp_collCash" query="/ns4:COLLCASHOutputCollection"/>
+        <to variable="outputVariable" part="payload" query="/ns4:COLLCASHOutputCollection"/>
+      </copy>
+    </assign>
+    <invoke name="callbackClient" inputVariable="outputVariable" partnerLink="collcashbpel_client" portType="client:CollCashBPELCallback" operation="processResponse" id="BpInv2"/>
+  </sequence>
+</process><!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Wed May 05 14:44:33 ICT 2010
+  Author:  medisagn64
+  Purpose: Synchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->

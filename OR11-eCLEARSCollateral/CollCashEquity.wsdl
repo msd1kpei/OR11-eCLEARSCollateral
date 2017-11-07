@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions name="CollCashEquity" targetNamespace="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashEquity" xmlns:ns2="http://xmlns.oracle.com/pcbpel/adapter/db/Query_COLLEQUITY" xmlns:ns1="http://www.kpei.co.id/razor/trigger/e-CLEARSCollateral" xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:client="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashEquity" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+   <plnk:partnerLinkType name="CollCashEquity">
+      <plnk:role name="CollCashEquityProvider">
+         <plnk:portType name="client:CollCashEquity"/>
+      </plnk:role>
+      <plnk:role name="CollCashEquityRequester">
+         <plnk:portType name="client:CollCashEquityCallback"/>
+      </plnk:role>
+   </plnk:partnerLinkType>
+   <wsdl:types>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://xmlns.oracle.com/pcbpel/adapter/db/Query_COLLEQUITY" xmlns:ns1="http://www.kpei.co.id/razor/e-CLEARSCollateral" xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:client="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashEquity" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+         <import namespace="http://www.kpei.co.id/razor/trigger/e-CLEARSCollateral" schemaLocation="xsd/CollateralInterface.xsd"/>
+      </schema>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://xmlns.oracle.com/pcbpel/adapter/db/Query_COLLEQUITY" xmlns:ns1="http://www.kpei.co.id/razor/e-CLEARSCollateral" xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:client="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashEquity" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+         <import namespace="http://xmlns.oracle.com/pcbpel/adapter/db/Query_COLLEQUITY" schemaLocation="xsd/Query_COLLEQUITY.xsd"/>
+      </schema>
+   </wsdl:types>
+   <wsdl:message name="CollCashEquityRequestMessage">
+      <wsdl:part name="payload" element="ns1:TriggerElement"/>
+   </wsdl:message>
+   <wsdl:message name="CollCashEquityResponseMessage">
+      <wsdl:part name="payload" element="ns2:Query_COLLEQUITYOutputCollection"/>
+   </wsdl:message>
+   <wsdl:portType name="CollCashEquity">
+      <wsdl:operation name="process">
+         <wsdl:input message="client:CollCashEquityRequestMessage"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:portType name="CollCashEquityCallback">
+      <wsdl:operation name="processResponse">
+         <wsdl:input message="client:CollCashEquityResponseMessage"/>
+      </wsdl:operation>
+   </wsdl:portType>
+</wsdl:definitions>

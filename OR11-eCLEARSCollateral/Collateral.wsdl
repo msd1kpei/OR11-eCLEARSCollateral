@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions name="Collateral" targetNamespace="http://oracle.com/sca/soapservice/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Collateral" xmlns:inp2="http://kpei.co.id/MDwsReply.xsd" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:inp1="http://www.kpei.co.id/schema/OnlineCollateral.001" xmlns:tns="http://oracle.com/sca/soapservice/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Collateral">
+   <wsdl:types>
+      <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+         <xsd:import namespace="http://www.kpei.co.id/schema/OnlineCollateral.001" schemaLocation="xsd/e-CLEARSCollateral-request.xsd"/>
+      </xsd:schema>
+      <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+         <xsd:import namespace="http://kpei.co.id/MDwsReply.xsd" schemaLocation="xsd/MDwsReply.xsd"/>
+      </xsd:schema>
+   </wsdl:types>
+   <wsdl:message name="requestMessage">
+      <wsdl:part name="part1" element="inp1:Collateral"/>
+   </wsdl:message>
+   <wsdl:message name="replyMessage">
+      <wsdl:part name="part1" element="inp2:wsReply"/>
+   </wsdl:message>
+   <wsdl:portType name="sendCollateral_ptt">
+      <wsdl:operation name="sendCollateral">
+         <wsdl:input message="tns:requestMessage"/>
+         <wsdl:output message="tns:replyMessage"/>
+      </wsdl:operation>
+   </wsdl:portType>
+</wsdl:definitions>

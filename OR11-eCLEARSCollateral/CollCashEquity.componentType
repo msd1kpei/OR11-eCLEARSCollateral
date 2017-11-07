@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<componentType xmlns="http://xmlns.oracle.com/sca/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ui="http://xmlns.oracle.com/soa/designer/">
+   <service name="collcashequity_client" ui:wsdlLocation="CollCashEquity.wsdl">
+      <interface.wsdl interface="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashEquity#wsdl.interface(CollCashEquity)" callbackInterface="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashEquity#wsdl.interface(CollCashEquityCallback)"/>
+   </service>
+   <reference name="Rownum_CollEquity" ui:wsdlLocation="Rownum_CollEquity.wsdl">
+      <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Rownum_CollEquity#wsdl.interface(Rownum_CollEquity_ptt)"/>
+   </reference>
+   <reference name="Query_COLLEQUITY" ui:wsdlLocation="Query_COLLEQUITY.wsdl">
+      <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Query_COLLEQUITY#wsdl.interface(Query_COLLEQUITY_ptt)"/>
+   </reference>
+</componentType>

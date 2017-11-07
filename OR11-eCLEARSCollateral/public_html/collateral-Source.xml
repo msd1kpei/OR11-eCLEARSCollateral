@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<e:Collateral xmlns:e="http://www.kpei.co.id/schema/OnlineCollateral.001">
+   <e:header id="medisa-aris-test-002">
+      <e:asAt>2010-05-21T01:01:01</e:asAt>
+      <e:source>e-CLEARS</e:source>
+   </e:header>
+   <e:collateralType>CollateralWithdrawal</e:collateralType>
+   <e:messageType>COLLBOND</e:messageType>
+   <e:body>
+      <e:content>
+         <e:deal>
+            <e:dealHeader>
+               <e:dealId>001</e:dealId>
+               <e:dealDate>2010-01-10</e:dealDate>
+            </e:dealHeader>
+            <e:trade>
+               <e:tradeHeader>
+                  <e:tradeId>00212</e:tradeId>
+                  <e:tradeDate>2010-01-10</e:tradeDate>
+                  <e:tradeType>super</e:tradeType>
+                  <e:counterparty>001</e:counterparty>
+               </e:tradeHeader>
+               <e:product>
+                  <e:bond>
+                     <e:issuer href="http://www.google.com"/>
+                     <e:securityId>001</e:securityId>
+                  </e:bond>
+               </e:product>
+               <e:extensions>
+                  <e:extension>
+                     <e:name>Account</e:name>
+                     <e:value>Nama_akun</e:value>
+                  </e:extension>
+                  <e:extension>
+                     <e:name>Market</e:name>
+                     <e:value>Derivative</e:value>
+                  </e:extension>
+               </e:extensions>
+            </e:trade>
+         </e:deal>
+      </e:content>
+   </e:body>
+   <e:ext>
+      <e:value id="?">?</e:value>
+   </e:ext>
+</e:Collateral>

@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<kpeiInbound xmlns="http://www.kpei.co.id/razor/e-CLEARSCollateral" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.kpei.co.id/razor/e-CLEARSCollateral file:/C:/WORK/DEVELOPMENT/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/xsd/e-CLEARSCollateral-response.xsd">
+   <header id="medisa-aris-test-002">
+      <asAt>2010-05-21T01:01:01</asAt>
+      <sourceSystem>e-CLEARS</sourceSystem>
+   </header>
+   <body>
+      <content>
+         <deal>
+            <dealHeader>
+               <dealId>001</dealId>
+               <dealType>Value256</dealType>
+               <dealDate>2010-01-10</dealDate>
+               <status>Value259</status>
+            </dealHeader>
+            <trade>
+               <tradeHeader>
+                  <tradeId>00212</tradeId>
+                  <tradeDate>2010-01-10</tradeDate>
+                  <tradeType>super</tradeType>
+                  <counterparty>001</counterparty>
+                  <internalUnit>Value262</internalUnit>
+                  <buySell>Value256</buySell>
+                  <status>Value259</status>
+               </tradeHeader>
+               <product>
+                  <cashPayment>
+                     <paymentDate/>
+                     <amount ccy=""/>
+                  </cashPayment>
+                  <equity>
+                     <instrumentId/>
+                     <numberShares/>
+                     <exchangeCode>Value262</exchangeCode>
+                     <currency/>
+                     <paymentAmount>
+                        <paymentType/>
+                        <paymentAmount>
+                           <currency xsi:type="xsd:string"/>
+                           <amount/>
+                        </paymentAmount>
+                        <adjustedPaymentDate/>
+                     </paymentAmount>
+                  </equity>
+                  <bond>
+                     <issuer href="http://www.google.com"/>
+                     <securityId>001</securityId>
+                  </bond>
+               </product>
+               <extensions>
+                  <extension>
+                     <name>Account</name>
+                     <value>Nama_akun</value>
+                  </extension>
+                  <extension>
+                     <name>Market</name>
+                     <value>Derivative</value>
+                  </extension>
+               </extensions>
+            </trade>
+         </deal>
+      </content>
+   </body>
+</kpeiInbound>

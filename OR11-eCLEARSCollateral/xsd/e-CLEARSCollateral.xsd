@@ -1,0 +1,685 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+   <xsd:element name="kpeiInbound">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="header" type="kpeiHeader"/>
+            <xsd:element name="body">
+               <xsd:complexType>
+                  <xsd:sequence>
+                     <xsd:element ref="content"/>
+                  </xsd:sequence>
+               </xsd:complexType>
+            </xsd:element>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="kpeiHeader">
+      <xsd:sequence>
+         <xsd:element name="asAt" type="xsd:dateTime">
+            <xsd:annotation>
+               <xsd:documentation>timestamp of the message</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="sourceSystem">
+            <xsd:annotation>
+               <xsd:documentation>originating system that produced the message</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="100"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:string" use="required">
+         <xsd:annotation>
+            <xsd:documentation>id of the message</xsd:documentation>
+         </xsd:annotation>
+      </xsd:attribute>
+   </xsd:complexType>
+   <xsd:element name="value" type="xsd:string"/>
+   <xsd:element name="tradeType">
+      <xsd:simpleType>
+         <xsd:restriction base="xsd:string"/>
+      </xsd:simpleType>
+   </xsd:element>
+   <xsd:element name="tradeId">
+      <xsd:simpleType>
+         <xsd:restriction base="xsd:string"/>
+      </xsd:simpleType>
+   </xsd:element>
+   <xsd:element name="adjustedPaymentDate" type="xsd:date"/>
+   <xsd:element name="paymentType">
+      <xsd:simpleType>
+         <xsd:restriction base="xsd:string"/>
+      </xsd:simpleType>
+   </xsd:element>
+   <xsd:element name="paymentAmount">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element ref="paymentType"/>
+            <xsd:element name="paymentAmount">
+               <xsd:complexType>
+                  <xsd:sequence>
+                     <xsd:element name="currency"/>
+                     <xsd:element name="amount" type="xsd:decimal"/>
+                  </xsd:sequence>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element ref="adjustedPaymentDate"/>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="equity">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element ref="instrumentId"/>
+            <xsd:element ref="numberShares"/>
+            <xsd:element ref="exchangeCode"/>
+            <xsd:element ref="currency"/>
+            <xsd:element ref="paymentAmount"/>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="tradeHeader">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element ref="tradeId"/>
+            <xsd:element ref="tradeDate"/>
+            <xsd:element ref="tradeType"/>
+            <xsd:element ref="counterparty"/>
+            <xsd:element ref="internalUnit"/>
+            <xsd:element ref="buySell"/>
+            <xsd:element ref="status"/>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="tradeDate" type="xsd:string"/>
+   <xsd:element name="trade">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element ref="tradeHeader"/>
+            <xsd:element ref="product"/>
+            <xsd:element ref="extensions" minOccurs="0"/>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="status">
+      <xsd:simpleType>
+         <xsd:restriction base="xsd:string"/>
+      </xsd:simpleType>
+   </xsd:element>
+   <xsd:element name="scheme">
+      <xsd:simpleType>
+         <xsd:restriction base="xsd:string"/>
+      </xsd:simpleType>
+   </xsd:element>
+   <xsd:element name="schema">
+      <xsd:simpleType>
+         <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="FinMark"/>
+         </xsd:restriction>
+      </xsd:simpleType>
+   </xsd:element>
+   <xsd:element name="session">
+      <xsd:simpleType>
+         <xsd:restriction base="xsd:string"/>
+      </xsd:simpleType>
+   </xsd:element>
+   <xsd:element name="replicate" type="xsd:byte"/>
+   <xsd:element name="responseMode">
+      <xsd:simpleType>
+         <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="XML"/>
+         </xsd:restriction>
+      </xsd:simpleType>
+   </xsd:element>
+   <xsd:element name="requestTime">
+      <xsd:simpleType>
+         <xsd:restriction base="xsd:dateTime"/>
+      </xsd:simpleType>
+   </xsd:element>
+   <xsd:element name="caller">
+      <xsd:complexType/>
+   </xsd:element>
+   <xsd:element name="sequenceNumber" type="xsd:byte"/>
+   <xsd:element name="numberShares" type="xsd:decimal"/>
+   <xsd:element name="instrumentId" type="xsd:string"/>
+   <xsd:element name="currency">
+      <xsd:simpleType>
+         <xsd:restriction base="xsd:string"/>
+      </xsd:simpleType>
+   </xsd:element>
+   <xsd:element name="exchangeCode">
+      <xsd:simpleType>
+         <xsd:restriction base="xsd:string"/>
+      </xsd:simpleType>
+   </xsd:element>
+   <xsd:element name="product">
+      <xsd:complexType>
+         <xsd:choice>
+            <xsd:element ref="cashPayment"/>
+            <xsd:element ref="equity"/>
+            <xsd:element ref="bond"/>
+         </xsd:choice>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="paymentDate" type="xsd:date"/>
+   <xsd:element name="node">
+      <xsd:simpleType>
+         <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="finMark"/>
+         </xsd:restriction>
+      </xsd:simpleType>
+   </xsd:element>
+   <xsd:element name="name">
+      <xsd:simpleType>
+         <xsd:restriction base="xsd:string"/>
+      </xsd:simpleType>
+   </xsd:element>
+   <xsd:element name="internalUnit">
+      <xsd:simpleType>
+         <xsd:restriction base="xsd:string"/>
+      </xsd:simpleType>
+   </xsd:element>
+   <xsd:element name="extensions">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element ref="extension" maxOccurs="unbounded"/>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="extension">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element ref="name"/>
+            <xsd:element ref="value"/>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="dealType">
+      <xsd:simpleType>
+         <xsd:restriction base="xsd:string"/>
+      </xsd:simpleType>
+   </xsd:element>
+   <xsd:element name="dealId">
+      <xsd:simpleType>
+         <xsd:restriction base="xsd:string"/>
+      </xsd:simpleType>
+   </xsd:element>
+   <xsd:element name="dealHeader">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element ref="dealId"/>
+            <xsd:element ref="dealType"/>
+            <xsd:element ref="dealDate"/>
+            <xsd:element ref="status"/>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="dealDate" type="xsd:string"/>
+   <xsd:element name="deal">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element ref="dealHeader"/>
+            <xsd:element ref="trade"/>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="counterparty">
+      <xsd:simpleType>
+         <xsd:restriction base="xsd:string"/>
+      </xsd:simpleType>
+   </xsd:element>
+   <xsd:element name="content">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element ref="scheme" minOccurs="0"/>
+            <xsd:element ref="deal" maxOccurs="unbounded"/>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="cashPayment">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="paymentDate" type="xsd:date"/>
+            <xsd:element name="amount" type="Amount"/>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="buySell">
+      <xsd:simpleType>
+         <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="BUY"/>
+            <xsd:enumeration value="SELL"/>
+         </xsd:restriction>
+      </xsd:simpleType>
+   </xsd:element>
+   <xsd:element name="body">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element ref="schema"/>
+            <xsd:element ref="action"/>
+            <xsd:element ref="node"/>
+            <xsd:element ref="content"/>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="Amount">
+      <xsd:simpleContent>
+         <xsd:extension base="xsd:decimal">
+            <xsd:attribute name="ccy" type="xsd:string"/>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <xsd:element name="action">
+      <xsd:simpleType>
+         <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="insert"/>
+         </xsd:restriction>
+      </xsd:simpleType>
+   </xsd:element>
+   <xsd:element name="bond">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="position" type="xsd:integer" minOccurs="0">
+               <xsd:annotation>
+                  <xsd:documentation>ATTRIB:desc:The number of bonds held long (positive) or short (negative).</xsd:documentation>
+               </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="exInterestDays" minOccurs="0">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:int"/>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="issuer" type="fpmlPartyReference"/>
+            <xsd:element name="securityId">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:maxLength value="80"/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="bondStream" type="fpmlInterestRateStream" minOccurs="0">
+               <xsd:annotation>
+                  <xsd:documentation>ATTRIB:desc:The optional fpmlInterestRateStream structure that defines the interest rate flows for the bond</xsd:documentation>
+               </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="paymentAmount" type="fpmlPayment" minOccurs="0"/>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="fpmlInterestRateStream">
+      <xsd:sequence>
+         <xsd:element name="payerPartyReference" type="fpmlPartyReference">
+            <xsd:annotation>
+               <xsd:documentation>ATTRIB:desc:The identifier of the paying party</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="receiverPartyReference" type="fpmlPartyReference">
+            <xsd:annotation>
+               <xsd:documentation>ATTRIB:desc:The identifier of the receiving party</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="calculationPeriodDates" type="fpmlCalculationPeriodDates">
+            <xsd:annotation>
+               <xsd:documentation>ATTRIB:desc:Indicates the schedule that the floating rate calculations occurs</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="paymentDates" type="fpmlPaymentDates">
+            <xsd:annotation>
+               <xsd:documentation>ATTRIB:desc:Indicates the schedule that the date payments occur</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="calculationPeriodAmount" type="fpmlCalculationPeriodAmount">
+            <xsd:annotation>
+               <xsd:documentation>ATTRIB:desc:This structure indicates how the amounts to be paid is determined</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="principalExchanges" type="fpmlPrincipalExchanges" minOccurs="0">
+            <xsd:annotation>
+               <xsd:documentation>ATTRIB:desc:Determines if and when the exchange of principal is done</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="fpmlMoney">
+      <xsd:annotation>
+         <xsd:documentation>ATTRIB:desc:A type defining a currency amount.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="currency" type="xsd:string">
+            <xsd:annotation>
+               <xsd:documentation>ATTRIB:desc:The currency in which an amount is denominated.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="amount" type="xsd:decimal">
+            <xsd:annotation>
+               <xsd:documentation>ATTRIB:desc:The monetary quantity in currency units.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="fpmlPayment">
+      <xsd:sequence>
+         <xsd:element name="receiverPartyReference" type="fpmlPartyReference" minOccurs="0"/>
+         <xsd:element name="payerPartyReference" type="fpmlPartyReference" minOccurs="0"/>
+         <xsd:element name="paymentAmount" type="fpmlMoney"/>
+         <xsd:element name="paymentDate" type="fpmlAdjustableDate" minOccurs="0"/>
+         <xsd:element name="adjustedPaymentDate" type="xsd:date" minOccurs="0"/>
+         <xsd:element name="paymentType" minOccurs="0">
+            <xsd:annotation>
+               <xsd:documentation>ATTRIB:eg:MARGIN</xsd:documentation>
+               <xsd:documentation>ATTRIB:desc:The type of payment being made (eg BROKERAGE)</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="30"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:simpleType name="fpmlCurrency">
+      <xsd:restriction base="xsd:string">
+         <xsd:maxLength value="3"/>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:complexType name="fpmlPartyReference">
+      <xsd:attribute name="href">
+         <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+               <xsd:maxLength value="30"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+      </xsd:attribute>
+   </xsd:complexType>
+   <xsd:complexType name="fpmlCalculationPeriodDates">
+      <xsd:sequence>
+         <xsd:element name="effectiveDate" type="fpmlUnadjustedDate"/>
+         <xsd:element name="terminationDate" type="fpmlUnadjustedDate"/>
+         <xsd:element name="calculationPeriodDatesAdjustments" type="fpmlDateAdjustments"/>
+         <xsd:element name="calculationPeriodFrequency" type="fpmlCalculationPeriodFrequency"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="fpmlId"/>
+   </xsd:complexType>
+   <xsd:complexType name="fpmlPaymentDates">
+      <xsd:sequence>
+         <xsd:element name="paymentFrequency" type="fpmlTenor"/>
+         <xsd:element name="paymentDatesAdjustments" type="fpmlDateAdjustments" minOccurs="0"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="fpmlCalculationPeriodAmount">
+      <xsd:sequence>
+         <xsd:element name="calculation" type="fpmlCalculation"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="fpmlPrincipalExchanges">
+      <xsd:sequence>
+         <xsd:element name="initialExchange" type="xsd:boolean"/>
+         <xsd:element name="finalExchange" type="xsd:boolean"/>
+         <xsd:element name="intermediateExchange" type="xsd:boolean"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="fpmlUnadjustedDate">
+      <xsd:sequence>
+         <xsd:element name="unadjustedDate" type="xsd:date"/>
+         <xsd:element name="dateAdjustments" type="fpmlDateAdjustments" minOccurs="0"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="fpmlAdjustableDate">
+      <xsd:sequence>
+         <xsd:element name="unadjustedDate" type="xsd:date"/>
+         <xsd:element name="dateAdjustments" type="fpmlBusinessDayAdjustments"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:simpleType name="fpmlId">
+      <xsd:restriction base="xsd:string">
+         <xsd:maxLength value="50"/>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:complexType name="fpmlDateAdjustments">
+      <xsd:sequence>
+         <xsd:element name="businessDayConvention">
+            <xsd:annotation>
+               <xsd:documentation>ATTRIB:shortName:BusinessDayConvention</xsd:documentation>
+               <xsd:documentation>ATTRIB:desc:Business Day Conventions. (FOLLOWING, MODFOLLOWING)</xsd:documentation>
+               <xsd:documentation>ATTRIB:eg:(FOLLOWING, MODFOLLOWING)</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="30"/>
+                  <xsd:enumeration value="FOLLOWING"/>
+                  <xsd:enumeration value="PRECEDING"/>
+                  <xsd:enumeration value="FRN"/>
+                  <xsd:enumeration value="MODFOLLOWING"/>
+                  <xsd:enumeration value="MODPRECEDING"/>
+                  <xsd:enumeration value="NONE"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="fpmlRef">
+      <xsd:attribute name="href">
+         <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+               <xsd:maxLength value="30"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+      </xsd:attribute>
+   </xsd:complexType>
+   <xsd:complexType name="fpmlCalculationPeriodFrequency">
+      <xsd:sequence>
+         <xsd:element name="periodMultiplier" type="xsd:short"/>
+         <xsd:element name="period" type="fpmlPeriod">
+            <xsd:annotation>
+               <xsd:documentation>ATTRIB:desc:Period Characters. (D, W, M, Y)</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="rollConvention" type="fpmlRollConvention">
+            <xsd:annotation>
+               <xsd:documentation>ATTRIB:desc:Roll Conventions. (EOM, FRN, IMM, IMCAD, SFE, NONE, TBILL, 1-30, MON, TUE, WED, THU, FRI, SAT, SUN)</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="fpmlTenor">
+      <xsd:sequence>
+         <xsd:element name="periodMultiplier" type="xsd:short"/>
+         <xsd:element name="period" type="fpmlPeriod">
+            <xsd:annotation>
+               <xsd:documentation>ATTRIB:desc:Period Characters. (D, W, M, Y)</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="fpmlBusinessDayAdjustments">
+      <xsd:annotation>
+         <xsd:documentation xml:lang="en">A type defining the business day convention and financial business centers used for adjusting any relevant date if it would otherwise fall on a day that is not a business day in the specified business centers.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="businessDayConvention" type="fpmlBusinessDayConventionEnum">
+            <xsd:annotation>
+               <xsd:documentation xml:lang="en">The convention for adjusting a date if it would otherwise fall on a day that is not a business day. (FOLLOWING, FRN, MODFOLLOWING, PRECEDING, MODPRECEDING, NONE, NotApplicable)</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="fpmlAdjustedDate">
+      <xsd:simpleContent>
+         <xsd:extension base="xsd:date">
+            <xsd:attribute name="id" type="xsd:int"/>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <xsd:complexType name="fpmlFixedRateScheduleStep">
+      <xsd:sequence>
+         <xsd:element name="stepDate" type="fpmlAdjustedDate" minOccurs="0"/>
+         <xsd:element name="stepValue" type="xsd:decimal" minOccurs="0"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="fpmlFixedRateSchedule">
+      <xsd:sequence>
+         <xsd:element name="initialValue" type="xsd:decimal"/>
+         <xsd:element name="step" type="fpmlFixedRateScheduleStep" minOccurs="0"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="fpmlCalculation">
+      <xsd:sequence>
+         <xsd:element name="notionalSchedule" type="fpmlNotionalSchedule" minOccurs="0"/>
+         <xsd:element name="dayCountFraction" type="fpmlDayCountFraction">
+            <xsd:annotation>
+               <xsd:documentation>ATTRIB:desc:Day Count Fractions. (ACT/360, ACT/365, 30/360)</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="fixedRateSchedule" type="fpmlFixedRateSchedule" minOccurs="0"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:simpleType name="fpmlPeriod">
+      <xsd:annotation>
+         <xsd:documentation>ATTRIB:shortName:Period</xsd:documentation>
+         <xsd:documentation>ATTRIB:desc:Period Characters. (D, W, M, Y)</xsd:documentation>
+         <xsd:documentation>ATTRIB:eg:(D, W, M, Y)</xsd:documentation>
+      </xsd:annotation>
+      <xsd:restriction base="xsd:string">
+         <xsd:maxLength value="1"/>
+         <xsd:enumeration value="D"/>
+         <xsd:enumeration value="W"/>
+         <xsd:enumeration value="M"/>
+         <xsd:enumeration value="Y"/>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="fpmlRollConvention">
+      <xsd:annotation>
+         <xsd:documentation>ATTRIB:shortName:RollConvention</xsd:documentation>
+         <xsd:documentation>ATTRIB:desc:Roll Conventions. (EOM, FRN, IMM, IMCAD, SFE, NONE, TBILL, 1-30, MON, TUE, WED, THU, FRI, SAT, SUN)</xsd:documentation>
+         <xsd:documentation>ATTRIB:eg:(EOM, FRN, IMM, IMCAD, SFE, NONE, TBILL, 1-30, MON, TUE, WED, THU, FRI, SAT, SUN)</xsd:documentation>
+      </xsd:annotation>
+      <xsd:restriction base="xsd:string">
+         <xsd:maxLength value="20"/>
+         <xsd:enumeration value="EOM"/>
+         <xsd:enumeration value="FRN"/>
+         <xsd:enumeration value="IMM"/>
+         <xsd:enumeration value="IMMCAD"/>
+         <xsd:enumeration value="SFE"/>
+         <xsd:enumeration value="NONE"/>
+         <xsd:enumeration value="TBILL"/>
+         <xsd:enumeration value="1"/>
+         <xsd:enumeration value="2"/>
+         <xsd:enumeration value="3"/>
+         <xsd:enumeration value="4"/>
+         <xsd:enumeration value="5"/>
+         <xsd:enumeration value="6"/>
+         <xsd:enumeration value="7"/>
+         <xsd:enumeration value="8"/>
+         <xsd:enumeration value="9"/>
+         <xsd:enumeration value="10"/>
+         <xsd:enumeration value="11"/>
+         <xsd:enumeration value="12"/>
+         <xsd:enumeration value="13"/>
+         <xsd:enumeration value="14"/>
+         <xsd:enumeration value="15"/>
+         <xsd:enumeration value="16"/>
+         <xsd:enumeration value="17"/>
+         <xsd:enumeration value="18"/>
+         <xsd:enumeration value="19"/>
+         <xsd:enumeration value="20"/>
+         <xsd:enumeration value="21"/>
+         <xsd:enumeration value="22"/>
+         <xsd:enumeration value="23"/>
+         <xsd:enumeration value="24"/>
+         <xsd:enumeration value="25"/>
+         <xsd:enumeration value="26"/>
+         <xsd:enumeration value="27"/>
+         <xsd:enumeration value="28"/>
+         <xsd:enumeration value="29"/>
+         <xsd:enumeration value="30"/>
+         <xsd:enumeration value="MON"/>
+         <xsd:enumeration value="TUE"/>
+         <xsd:enumeration value="WED"/>
+         <xsd:enumeration value="THU"/>
+         <xsd:enumeration value="FRI"/>
+         <xsd:enumeration value="SAT"/>
+         <xsd:enumeration value="SUN"/>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="fpmlBusinessDayConventionEnum">
+      <xsd:annotation>
+         <xsd:documentation source="http://www.FpML.org" xml:lang="en">The convention for adjusting any relevant date if it would otherwise fall on a day that is not a valid business day. Note that FRN is included herer as a type of business day convention although it does not strictly fall within ISDA's definition of a Business Day Convention and does not conform to the simple definition given above. (FOLLOWING, FRN, MODFOLLOWING, PRECEDING, MODPRECEDING, NONE, NotApplicable)</xsd:documentation>
+      </xsd:annotation>
+      <xsd:restriction base="xsd:string">
+         <xsd:enumeration value="FOLLOWING">
+            <xsd:annotation>
+               <xsd:documentation source="http://www.FpML.org" xml:lang="en">The non-business date will be adjusted to the first following day that is a business day</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="FRN">
+            <xsd:annotation>
+               <xsd:documentation source="http://www.FpML.org" xml:lang="en">Per 2000 ISDA Definitions, Section 4.11. FRN Convention; Eurodollar Convention, i.e.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="MODFOLLOWING">
+            <xsd:annotation>
+               <xsd:documentation source="http://www.FpML.org" xml:lang="en">The non-business date will be adjusted to the first following day that is a business day unless that day falls in the next calendar month, in which case that date will be the first preceding day that is a business day.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="PRECEDING">
+            <xsd:annotation>
+               <xsd:documentation source="http://www.FpML.org" xml:lang="en">The non-business day will be adjusted to the first preceding day that is a business day.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="MODPRECEDING">
+            <xsd:annotation>
+               <xsd:documentation source="http://www.FpML.org" xml:lang="en">The non-business date will be adjusted to the first preceding day that is a business day unless that day falls in the previous calendar month, in which case that date will be the first following day that us a business day.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="NONE">
+            <xsd:annotation>
+               <xsd:documentation source="http://www.FpML.org" xml:lang="en">The date will not be adjusted if it falls on a day that is not a business day.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="NotApplicable">
+            <xsd:annotation>
+               <xsd:documentation source="http://www.FpML.org" xml:lang="en">The date adjustments conventions are defined elsewhere, so it is not required to specify them here.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:complexType name="fpmlNotionalSchedule">
+      <xsd:sequence>
+         <xsd:element name="notionalStepSchedule" type="fpmlAmountSchedule"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:simpleType name="fpmlDayCountFraction">
+      <xsd:annotation>
+         <xsd:documentation>ATTRIB:shortName:DayCountFraction</xsd:documentation>
+         <xsd:documentation>ATTRIB:desc:Day Count Fractions. (ACT/360,ACT/365, 30/360)</xsd:documentation>
+         <xsd:documentation>ATTRIB:eg:(ACT/360,ACT/365, 30/360)</xsd:documentation>
+      </xsd:annotation>
+      <xsd:restriction base="xsd:string">
+         <xsd:maxLength value="15"/>
+         <xsd:enumeration value="ACT/360"/>
+         <xsd:enumeration value="ACT/365"/>
+         <xsd:enumeration value="30/360"/>
+         <xsd:enumeration value="30E/360"/>
+         <xsd:enumeration value="ACT/ACT"/>
+         <xsd:enumeration value="ACT/365.25"/>
+         <xsd:enumeration value="ACT/365.FIXED"/>
+         <xsd:enumeration value="ACT/365.ACT"/>
+         <xsd:enumeration value="ACT/365.END"/>
+         <xsd:enumeration value="ACT/ACT.ISDA"/>
+         <xsd:enumeration value="ACT/ACT.ISMA"/>
+         <xsd:enumeration value="ACT/ACT.AFB"/>
+         <xsd:enumeration value="1/1"/>
+         <xsd:enumeration value="BUS/252"/>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:complexType name="fpmlAmountSchedule">
+      <xsd:sequence>
+         <xsd:element name="initialValue" type="xsd:decimal"/>
+         <xsd:element name="currency" type="fpmlCurrency"/>
+      </xsd:sequence>
+   </xsd:complexType>
+</xsd:schema>

@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Collateral xmlns="http://www.kpei.co.id/schema/OnlineCollateral.001">
+   <header id="id86">
+      <asAt>2010-05-24T15:10:35.348</asAt>
+      <source>source87</source>
+   </header>
+   <collateralType>collateralType88</collateralType>
+   <messageType>messageType89</messageType>
+   <body>
+      <content>
+         <scheme>scheme90</scheme>
+         <deal>
+            <dealHeader>
+               <dealId>dealId91</dealId>
+               <dealDate>dealDate92</dealDate>
+            </dealHeader>
+            <trade>
+               <tradeHeader>
+                  <tradeId>tradeId93</tradeId>
+                  <tradeDate>tradeDate94</tradeDate>
+                  <tradeType>tradeType95</tradeType>
+                  <counterparty>counterparty96</counterparty>
+               </tradeHeader>
+               <product/>
+            </trade>
+         </deal>
+         <deal>
+            <dealHeader>
+               <dealId>dealId97</dealId>
+               <dealDate>dealDate98</dealDate>
+            </dealHeader>
+            <trade>
+               <tradeHeader>
+                  <tradeId>tradeId99</tradeId>
+                  <tradeDate>tradeDate100</tradeDate>
+                  <tradeType>tradeType101</tradeType>
+                  <counterparty>counterparty102</counterparty>
+               </tradeHeader>
+               <product/>
+            </trade>
+         </deal>
+         <deal>
+            <dealHeader>
+               <dealId>dealId103</dealId>
+               <dealDate>dealDate104</dealDate>
+            </dealHeader>
+            <trade>
+               <tradeHeader>
+                  <tradeId>tradeId105</tradeId>
+                  <tradeDate>tradeDate106</tradeDate>
+                  <tradeType>tradeType107</tradeType>
+                  <counterparty>counterparty108</counterparty>
+               </tradeHeader>
+               <product/>
+            </trade>
+         </deal>
+      </content>
+   </body>
+   <ext>
+      <value id="id109">string110</value>
+      <value id="id111">string112</value>
+      <value id="id113">string114</value>
+   </ext>
+</Collateral>

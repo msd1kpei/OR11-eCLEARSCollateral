@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<adapter-config name="Rownum_CollEquity" adapter="Database Adapter" wsdlLocation="Rownum_CollEquity.wsdl" xmlns="http://platform.integration.oracle/blocks/adapter/fw/metadata">
+   <connection-factory location="eis/DB/ds_eclears" UIConnectionName="ds_eclears" adapterRef=""/>
+   <endpoint-interaction portType="Rownum_CollEquity_ptt" operation="Rownum_CollEquity">
+      <interaction-spec className="oracle.tip.adapter.db.DBPureSQLInteractionSpec">
+         <property name="SqlString" value="select count(acc.id_acct_capco) id_acct_capco from atlanta.members mem, atlanta.basic_securities ic, atlanta.accounts acc, atlanta.balances bal where acc.id_acct_capco = bal.acct_id_acct_capco and ic.id_ins_capco = bal.ins_id_ins_capco and code_base_sec not in ('IDR','USD') and mem.id_mem_capco = acc.mem_id_mem_capco and typ_acct = 4 and typ_blnc = 1 and typ_sec not in (2,3,14,15,16) and amt_blnc &lt;> 0 order by bal.lst_upd_ts desc"/>
+         <property name="GetActiveUnitOfWork" value="false"/>
+      </interaction-spec>
+      <input/>
+      <output/>
+   </endpoint-interaction>
+</adapter-config>

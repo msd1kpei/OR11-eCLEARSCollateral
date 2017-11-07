@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<TriggerElement xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kpei.co.id/razor/trigger/e-CLEARSCollateral file:/C:/WORK/DEVELOPMENT/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/xsd/CollateralInterface.xsd" xmlns="http://www.kpei.co.id/razor/trigger/e-CLEARSCollateral">
+   <header id="id1">
+      <asAt>2010-05-17T14:29:33.715</asAt>
+      <source>source2</source>
+   </header>
+   <collateralType>collateralType3</collateralType>
+   <messageType>messageType4</messageType>
+   <numberOfBAtch>5</numberOfBAtch>
+</TriggerElement>

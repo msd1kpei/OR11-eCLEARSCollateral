@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<adapter-config name="Query_COLLCASH" adapter="Database Adapter" wsdlLocation="Query_COLLCASH.wsdl" xmlns="http://platform.integration.oracle/blocks/adapter/fw/metadata">
+   <connection-factory location="eis/DB/ds_eclears" UIConnectionName="ds_eclears" adapterRef=""/>
+   <endpoint-interaction portType="Query_COLLCASH_ptt" operation="Query_COLLCASH">
+      <interaction-spec className="oracle.tip.adapter.db.DBPureSQLInteractionSpec">
+         <property name="SqlString" value="select * from ( select rownum, 'COLLEQ_'||to_char(sysdate,'YYYYMMDDhhmmss') headerid, to_char(sysdate,'YYYY-MM-DD')||'T'||to_char(sysdate,'hh:mm:ss')||'Z' asAt, 'e-CLEARS' sourcesystem,'COLLEQ_'||dsc_mem_short||'_'||code_base_sec dealid, 'CUSTOM' dealtype, to_char(sysdate,'YYYY-MM-DD') dealdate, 'OPEN' dstatus, 'COLLEQ_'||dsc_mem_short||'_'||code_base_sec tradeid, to_char(sysdate,'YYYY-MM-DD') tradedate, 'COLLEQ' tradetype, dsc_mem_short counterparty, 'KPEI' internalunit, 'BUY' buysell, 'OPEN' tstatus,code_base_sec instrumentid, amt_blnc numbershares, 'IDX' exchangecode, 'IDR' currency,  'COLLATERAL' paymenttype, 'IDR' paycurrency, amt_blnc payamount, to_char(sysdate,'YYYY-MM-DD') paymentdate,'Account' extacc, id_acct extaccval, 'Market' extmrkt, 'Online Collateral' valmrkt from atlanta.members mem, atlanta.basic_securities ic, atlanta.accounts acc, atlanta.balances bal where acc.id_acct_capco = bal.acct_id_acct_capco and ic.id_ins_capco = bal.ins_id_ins_capco and code_base_sec not in ('IDR','USD') and mem.id_mem_capco = acc.mem_id_mem_capco and typ_acct = 4 and typ_blnc = 1 and typ_sec not in (2,3,14,15,16) and amt_blnc &lt;> 0 order by bal.lst_upd_ts desc ) where rownum &lt;= #lownum and rownum > #hinum"/>
+         <property name="GetActiveUnitOfWork" value="false"/>
+      </interaction-spec>
+      <input/>
+      <output/>
+   </endpoint-interaction>
+</adapter-config>

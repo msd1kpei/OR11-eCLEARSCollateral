@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Mediator name="RouteCollateralQueue" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.oracle.com/sca/1.0/mediator" wsdlTargetNamespace="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Inbound_CollateralQueue">
+   <operation name="Consume_Message" deliveryPolicy="AllOrNothing" priority="4" validateSchema="false">
+      <switch>
+         <case executionType="direct" name="PrepareCollateralAck.preparecollateralack_client.process">
+            <action>
+               <transform>
+                  <part name="$out.payload" function="xslt(xsl/CollateralQ_To_CollateralProcess.xsl, $in.body)"/>
+               </transform>
+               <invoke reference="PrepareCollateralAck.preparecollateralack_client" operation="process">
+                  <onReply>
+                     <transform>
+                        <part name="$out.part1" function="xslt(xsl/ResponseMessage_To_ResponseMessage.xsl, $in.payload)"/>
+                     </transform>
+                     <forward reference="ResponseMessageSender" operation="execute"/>
+                  </onReply>
+               </invoke>
+            </action>
+         </case>
+      </switch>
+   </operation>
+</Mediator>

@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<getXMLDataReply xmlns="http://www.kpei.co.id/GE03-XMLUtility/types">
+   <xmlData>
+      <schemaName>schemaName178</schemaName>
+      <XPath>XPath179</XPath>
+      <Value>Value180</Value>
+   </xmlData>
+   <xmlData>
+      <schemaName>schemaName181</schemaName>
+      <XPath>XPath182</XPath>
+      <Value>Value183</Value>
+   </xmlData>
+   <xmlData>
+      <schemaName>schemaName184</schemaName>
+      <XPath>XPath185</XPath>
+      <Value>Value186</Value>
+   </xmlData>
+</getXMLDataReply>

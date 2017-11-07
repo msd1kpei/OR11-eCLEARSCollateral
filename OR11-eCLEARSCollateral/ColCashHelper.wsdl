@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions name="ColCashHelper" targetNamespace="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/ColCashHelper" xmlns:ns2="http://schemas.oracle.com/bpel/extension" xmlns:ns1="http://www.kpei.co.id/razor/trigger/e-CLEARSCollateral" xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:client="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/ColCashHelper" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+   <plnk:partnerLinkType name="ColCashHelper">
+      <plnk:role name="ColCashHelperProvider">
+         <plnk:portType name="client:ColCashHelper"/>
+      </plnk:role>
+   </plnk:partnerLinkType>
+   <wsdl:import namespace="http://schemas.oracle.com/bpel/extension" location="RuntimeFault.wsdl"/>
+   <wsdl:types>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema">
+         <import namespace="http://www.kpei.co.id/razor/trigger/e-CLEARSCollateral" schemaLocation="xsd/CollateralInterface.xsd"/>
+      </schema>
+   </wsdl:types>
+   <wsdl:message name="ColCashHelperRequestMessage">
+      <wsdl:part name="payload" element="ns1:TriggerElement"/>
+   </wsdl:message>
+   <wsdl:portType name="ColCashHelper">
+      <wsdl:operation name="process">
+         <wsdl:input message="client:ColCashHelperRequestMessage"/>
+      </wsdl:operation>
+   </wsdl:portType>
+</wsdl:definitions>

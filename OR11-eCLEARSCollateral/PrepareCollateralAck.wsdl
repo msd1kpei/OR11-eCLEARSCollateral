@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions name="PrepareCollateralAck" targetNamespace="http://xmlns.oracle.com/ARIS_KPEI_PROJECT/OR11_eCLEARSCollateral/PrepareCollateralAck" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:client="http://xmlns.oracle.com/ARIS_KPEI_PROJECT/OR11_eCLEARSCollateral/PrepareCollateralAck" xmlns:ns1="http://www.kpei.co.id/schema/OnlineCollateral.001" xmlns:ns2="http://www.kpei.co.id/ResponseMessage" xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/">
+   <wsdl:types>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema">
+         <import namespace="http://www.kpei.co.id/schema/OnlineCollateral.001" schemaLocation="xsd/e-CLEARSCollateral-request.xsd"/>
+      </schema>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema">
+         <import namespace="http://www.kpei.co.id/ResponseMessage" schemaLocation="xsd/ResponseMessage.xsd"/>
+      </schema>
+   </wsdl:types>
+   <wsdl:message name="PrepareCollateralAckRequestMessage">
+      <wsdl:part name="payload" element="ns1:Collateral"/>
+   </wsdl:message>
+   <wsdl:message name="PrepareCollateralAckResponseMessage">
+      <wsdl:part name="payload" element="ns2:ResponseMessage"/>
+   </wsdl:message>
+   <wsdl:portType name="PrepareCollateralAck">
+      <wsdl:operation name="process">
+         <wsdl:input message="client:PrepareCollateralAckRequestMessage"/>
+         <wsdl:output message="client:PrepareCollateralAckResponseMessage"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <plnk:partnerLinkType name="PrepareCollateralAck">
+      <plnk:role name="PrepareCollateralAckProvider">
+         <plnk:portType name="client:PrepareCollateralAck"/>
+      </plnk:role>
+   </plnk:partnerLinkType>
+</wsdl:definitions>

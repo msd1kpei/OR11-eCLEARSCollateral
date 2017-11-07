@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process name="CollateralProcessingBPEL" targetNamespace="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollateralProcessingBPEL" xmlns="http://schemas.xmlsoap.org/ws/2003/03/business-process/" xmlns:client="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollateralProcessingBPEL" xmlns:ora="http://schemas.oracle.com/xpath/extension" xmlns:bpelx="http://schemas.oracle.com/bpel/extension" xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/" xmlns:ns1="http://oracle.com/sca/soapservice/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/OR11_eCLEARSCollateral" xmlns:ns2="http://oracle.com/sca/soapservice/KPEI-MIDDLEWARE/Ge01-messageMonitor/messageMonitorService" xmlns:ns3="http://oracle.com/sca/soapservice/kpei/GE03-XMLUtility/GE03_XMLUtility" xmlns:ns4="http://www.kpei.co.id/GE02-FileUtility" xmlns:ns5="http://xmlns.oracle.com/pcbpel/adapter/file/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Write_Collateral" xmlns:ns6="http://kpei.co.id/MDwsReply.xsd" xmlns:xpath20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20" xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc" xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue" xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk" xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions" xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns7="http://www.kpei.co.id/kpei/messageMonitor" xmlns:ns8="http://www.kpei.co.id/schema/OnlineCollateral.001" xmlns:write="http://www.kpei.co.id/razor/e-CLEARSCollateral" xmlns:ns9="http://www.kpei.co.id/GE03-XMLUtility/types" xmlns:ns10="http://www.kpei.co.id/GE02-FileUtility/types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:socket="http://www.oracle.com/XSL/Transform/java/oracle.tip.adapter.socket.ProtocolTranslator" xmlns:mhdr="http://www.oracle.com/XSL/Transform/java/oracle.tip.mediator.service.common.functions.MediatorExtnFunction" xmlns:hwf="http://xmlns.oracle.com/bpel/workflow/xpath" xmlns:med="http://schemas.oracle.com/mediator/xpath" xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath" xmlns:bpel2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:bpm="http://xmlns.oracle.com/bpmn20/extensions" id="BpPrc0">
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      PARTNERLINKS                                                      
+      List of services participating in this BPEL process               
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  --> 
+  <partnerLinks>
+    <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+    <partnerLink myRole="execute_ptt" name="OR11-eCLEARSCollateral" partnerLinkType="ns1:OR11-eCLEARSCollateral"/>
+    <partnerLink name="GE03-XMLUtility" partnerRole="GE03-XMLUtility" partnerLinkType="ns3:GE03-XMLUtility"/>
+    <partnerLink name="GE02-FileUtility" partnerRole="GE02-FileUtility" partnerLinkType="ns4:GE02-FileUtility"/>
+    <partnerLink name="Write-Collateral" partnerRole="Write-Collateral-to-local_role" partnerLinkType="ns5:Write_Collateral_to_local_plt"/>
+  </partnerLinks>
+  <variables>
+    <variable name="InputVariable" messageType="ns1:requestMessage"/>
+    <variable name="OutputVariable" messageType="ns1:replyMessage"/>
+    <variable name="filename" type="xsd:string"/>
+    <variable name="temp_collateral" element="write:kpeiInbound"/>
+    <variable name="invalidVar" messageType="bpelx:RuntimeFaultMessage"/>
+    <variable name="replyValidation_sendCollateral_OutputVariable" messageType="ns1:replyMessage"/>
+  </variables>
+  <faultHandlers id="BpFhs0">
+    <catch faultName="bpelx:invalidVariables" faultVariable="invalidVar" id="BpCFt0">
+      <sequence id="BpSeq0">
+        <assign name="a_reply" id="BpAss0">
+          <copy>
+            <from expression="xpath20:current-dateTime()"/>
+            <to variable="replyValidation_sendCollateral_OutputVariable" part="reply" query="/ns6:wsReply/ns6:receiveDateTime"/>
+          </copy>
+          <copy>
+            <from expression="'ERROR'"/>
+            <to variable="replyValidation_sendCollateral_OutputVariable" part="reply" query="/ns6:wsReply/ns6:status"/>
+          </copy>
+          <copy>
+            <from expression="concat(string(bpws:getVariableData('invalidVar','summary')), ora:getFaultAsString())"/>
+            <to variable="replyValidation_sendCollateral_OutputVariable" part="reply" query="/ns6:wsReply/ns6:description"/>
+          </copy>
+        </assign>
+        <reply name="replyValidation" variable="replyValidation_sendCollateral_OutputVariable" partnerLink="OR11-eCLEARSCollateral" portType="ns1:execute_ptt" operation="sendCollateral" id="BpRpl0"/>
+      </sequence>
+    </catch>
+  </faultHandlers>
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      VARIABLES                                                        
+      List of messages and XML documents used within this BPEL process 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ORCHESTRATION LOGIC                                               
+     Set of activities coordinating the flow of messages across the    
+     services integrated within this business process                  
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <sequence name="main" id="BpSeq1">
+
+    <!-- Receive input from requestor. (Note: This maps to operation defined in CollateralProcessingBPEL.wsdl) -->
+    <receive name="receiveInput" partnerLink="OR11-eCLEARSCollateral" portType="ns1:execute_ptt" operation="sendCollateral" createInstance="yes" variable="InputVariable" id="BpRcv0"/>
+
+    <!-- Generate reply to synchronous request -->
+    <bpelx:validate name="inputValidation" variables="InputVariable" id="BpVal0"/>
+    <assign name="assignSukses" id="BpAss1">
+      <copy>
+        <from expression="'SUCCESS'"/>
+        <to variable="OutputVariable" part="reply" query="/ns6:wsReply/ns6:status"/>
+      </copy>
+      <copy>
+        <from expression="xpath20:current-dateTime()"/>
+        <to variable="OutputVariable" part="reply" query="/ns6:wsReply/ns6:receiveDateTime"/>
+      </copy>
+      <copy>
+        <from expression="'Berhasil mengirimkan message Collateral'"/>
+        <to variable="OutputVariable" part="reply" query="/ns6:wsReply/ns6:description"/>
+      </copy>
+    </assign>
+    <switch name="creatingFilename" id="BpSwt0">
+      <case condition="contains(xpath20:lower-case(string(bpws:getVariableData('InputVariable','request','/ns8:Collateral/ns8:collateralType'))),'collateralbuyw')">
+        <bpelx:annotation>
+          <bpelx:pattern>CollateralBuyW</bpelx:pattern>
+        </bpelx:annotation>
+        <assign name="buyW" id="BpAss2">
+          <copy>
+            <from expression="concat(ora:getCurrentDateTime(&quot;yyyyMMddHHmmssSSS&quot;),&quot;_&quot;,ora:getCompositeInstanceId(),&quot;_collateralBuyW&quot;)"/>
+            <to variable="filename"/>
+          </copy>
+        </assign>
+      </case>
+      <case condition="contains(xpath20:lower-case(string(bpws:getVariableData('InputVariable','request','/ns8:Collateral/ns8:collateralType'))),'collateralwithdrawal')">
+        <bpelx:annotation>
+          <bpelx:pattern>CollateralWithdrawal</bpelx:pattern>
+        </bpelx:annotation>
+        <assign name="withdrawal" id="BpAss3">
+          <copy>
+            <from expression="concat(ora:getCurrentDateTime(&quot;yyyyMMddHHmmssSSS&quot;),&quot;_&quot;,ora:getCompositeInstanceId(),&quot;_collateralWithdrawal&quot;)"/>
+            <to variable="filename"/>
+          </copy>
+        </assign>
+      </case>
+      <case condition="contains(xpath20:lower-case(string(bpws:getVariableData('InputVariable','request','/ns8:Collateral/ns8:collateralType'))),'collateraldeposit')">
+        <bpelx:annotation>
+          <bpelx:pattern>CollateralDeposit</bpelx:pattern>
+        </bpelx:annotation>
+        <assign name="deposit" id="BpAss4">
+          <copy>
+            <from expression="concat(ora:getCurrentDateTime(&quot;yyyyMMddHHmmssSSS&quot;),&quot;_&quot;,ora:getCompositeInstanceId(),&quot;_collateralDeposit&quot;)"/>
+            <to variable="filename"/>
+          </copy>
+        </assign>
+      </case>
+      <otherwise>
+        <assign name="filename" id="BpAss5">
+          <copy>
+            <from expression="concat(ora:getCurrentDateTime(&quot;yyyyMMddHHmmssSSS&quot;),&quot;_&quot;,ora:getCompositeInstanceId(),&quot;_error_filename&quot;)"/>
+            <to variable="filename"/>
+          </copy>
+        </assign>
+      </otherwise>
+    </switch>
+        <assign name="appendId" id="BpAss6">
+      <copy>
+        <from expression="concat(bpws:getVariableData('filename'),'.xml')"/>
+        <to variable="filename"/>
+      </copy>
+    </assign>
+    <scope name="processing" id="BpScp0">
+      <variables>
+        <variable name="reference_getXMLData_InputVariable" messageType="ns3:getXMLDataRequestMessage"/>
+        <variable name="reference_getXMLData_OutputVariable" messageType="ns3:getXMLDataReplyMessage"/>
+        <variable name="localPath_getLogicalDirectory_InputVariable" messageType="ns3:getLogicalDirectoryRequestMessage"/>
+        <variable name="localPath_getLogicalDirectory_OutputVariable" messageType="ns3:getLogicalDirectoryReplyMessage"/>
+        <variable name="extpath_getLogicalDirectory_InputVariable" messageType="ns3:getLogicalDirectoryRequestMessage"/>
+        <variable name="extpath_getLogicalDirectory_OutputVariable" messageType="ns3:getLogicalDirectoryReplyMessage"/>
+        <variable name="localinput" type="xsd:string"/>
+        <variable name="extinput" type="xsd:string"/>
+        <variable name="drcinput" type="xsd:string"/>
+        <variable name="dirLokal" type="xsd:string"/>
+        <variable name="dirExt" type="xsd:string"/>
+        <variable name="dirDRC" type="xsd:string"/>
+        <variable name="diggest_getMiddlewareConfig_InputVariable" messageType="ns3:getMiddlewareConfigRequestMessage"/>
+        <variable name="diggest_getMiddlewareConfig_OutputVariable" messageType="ns3:getMiddlewareConfigReplyMessage"/>
+        <variable name="writeLocal_Write-Collateral-to-local_InputVariable" messageType="ns5:Write-Collateral-to-local_msg"/>
+        <variable name="writeExternal_copyFile_InputVariable" messageType="ns4:copyFileRequestMessage"/>
+        <variable name="writeExternal_copyFile_OutputVariable" messageType="ns4:copyFileReplyMessage"/>
+        <variable name="writeDRC_copyFile_InputVariable" messageType="ns4:copyFileRequestMessage"/>
+        <variable name="writeDRC_copyFile_OutputVariable" messageType="ns4:copyFileReplyMessage"/>
+      </variables>
+      <faultHandlers id="BpFhs1">
+        <catchAll id="BpCAl0">
+          <assign name="assing_error" id="BpAss7">
+            <copy>
+              <from expression="concat('[MII001] Error pada komponen EquityFutureBPEL, InstanceId=',string(ora:getInstanceId()),' ',string(ora:getFaultAsString()))"/>
+              <to variable="OutputVariable" part="reply" query="/ns6:wsReply/ns6:description"/>
+            </copy>
+            <copy>
+              <from expression="'ERROR'"/>
+              <to variable="OutputVariable" part="reply" query="/ns6:wsReply/ns6:status"/>
+            </copy>
+            <copy>
+              <from expression="xpath20:current-dateTime()"/>
+              <to variable="OutputVariable" part="reply" query="/ns6:wsReply/ns6:receiveDateTime"/>
+            </copy>
+          </assign>
+        </catchAll>
+      </faultHandlers>
+      <sequence name="processing1" id="BpSeq2">
+        <assign name="assignDateZ" id="BpAss8">
+          <copy>
+            <from expression="concat(xpath20:format-dateTime(string(bpws:getVariableData('InputVariable','request','/ns8:Collateral/ns8:header/ns8:asAt')),'[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]'),'Z')"/>
+            <to variable="InputVariable" part="request" query="/ns8:Collateral/ns8:header/ns8:asAt"/>
+          </copy>
+        </assign>
+        <sequence name="getReference" id="BpSeq3">
+          <assign name="reference" id="BpAss9">
+            <copy>
+              <from expression="'OR11-eCLEARSCollateral'"/>
+              <to variable="reference_getXMLData_InputVariable" part="request" query="/ns9:getXMLDataRequest/ns9:schemaName"/>
+            </copy>
+          </assign>
+          <invoke name="enrichRef" inputVariable="reference_getXMLData_InputVariable" outputVariable="reference_getXMLData_OutputVariable" partnerLink="GE03-XMLUtility" portType="ns3:GE03-XMLUtility" operation="getXMLData" id="BpInv0"/>
+        </sequence>
+        <sequence name="enrichment" id="BpSeq4">
+          <assign name="enrich" id="BpAss10">
+            <bpelx:annotation>
+              <bpelx:pattern>transformation</bpelx:pattern>
+            </bpelx:annotation>
+            <copy>
+              <from expression="ora:doXSLTransformForDoc('xsl/collateral.xsl',bpws:getVariableData('InputVariable','request'),'reference_getXMLData_OutputVariable.reply',bpws:getVariableData('reference_getXMLData_OutputVariable','reply'))"/>
+              <to variable="temp_collateral"/>
+            </copy>
+          </assign>
+          <switch name="Switch_3" id="BpSwt1">
+            <case condition="contains(xpath20:lower-case(string(bpws:getVariableData('InputVariable','request','/ns8:Collateral/ns8:messageType'))),'bond')">
+              <bpelx:annotation>
+                <bpelx:pattern>bond</bpelx:pattern>
+              </bpelx:annotation>
+              <assign name="bond" id="BpAss11">
+                <bpelx:remove>
+                  <bpelx:target variable="temp_collateral" query="/write:kpeiInbound/write:body/write:content/write:deal/write:trade/write:product/write:cashPayment"/>
+                </bpelx:remove>
+                <bpelx:remove>
+                  <bpelx:target variable="temp_collateral" query="/write:kpeiInbound/write:body/write:content/write:deal/write:trade/write:product/write:equity"/>
+                </bpelx:remove>
+              </assign>
+            </case>
+            <case condition="contains(xpath20:lower-case(string(bpws:getVariableData('InputVariable','request','/ns8:Collateral/ns8:messageType'))),'colleq')">
+              <bpelx:annotation>
+                <bpelx:pattern>equity</bpelx:pattern>
+              </bpelx:annotation>
+              <assign name="equity" id="BpAss12">
+                <bpelx:remove>
+                  <bpelx:target variable="temp_collateral" query="/write:kpeiInbound/write:body/write:content/write:deal/write:trade/write:product/write:cashPayment"/>
+                </bpelx:remove>
+                <bpelx:remove>
+                  <bpelx:target variable="temp_collateral" query="/write:kpeiInbound/write:body/write:content/write:deal/write:trade/write:product/write:bond"/>
+                </bpelx:remove>
+              </assign>
+            </case>
+            <case condition="contains(xpath20:lower-case(string(bpws:getVariableData('InputVariable','request','/ns8:Collateral/ns8:messageType'))),'cash')">
+              <bpelx:annotation>
+                <bpelx:pattern>cash</bpelx:pattern>
+              </bpelx:annotation>
+              <sequence name="Sequence1" id="BpSeq5">
+                <assign name="tx_bond_price" id="BpAss13">
+                  <bpelx:annotation>
+                    <bpelx:pattern>transformation</bpelx:pattern>
+                  </bpelx:annotation>
+                  <copy>
+                    <from expression="ora:doXSLTransformForDoc('xsl/tx_bond_price.xsl', $temp_collateral)"/>
+                    <to variable="temp_collateral"/>
+                  </copy>
+                </assign>
+                <assign name="cashPayment" id="BpAss14">
+                  <bpelx:remove>
+                    <bpelx:target variable="temp_collateral" query="/write:kpeiInbound/write:body/write:content/write:deal/write:trade/write:product/write:equity"/>
+                  </bpelx:remove>
+                  <bpelx:remove>
+                    <bpelx:target variable="temp_collateral" query="/write:kpeiInbound/write:body/write:content/write:deal/write:trade/write:product/write:bond"/>
+                  </bpelx:remove>
+                </assign>
+              </sequence>
+            </case>
+          </switch>
+          <assign name="changeFilename" id="BpAss15">
+            <copy>
+              <from expression="substring-before(string(bpws:getVariableData('filename')),'.xml')"/>
+              <to variable="temp_collateral" query="/write:kpeiInbound/write:header/@id"/>
+            </copy>
+          </assign>
+        </sequence>
+        <sequence name="simpanKirim" id="BpSeq6">
+          <flow name="getVariable" id="BpFlw0">
+            <sequence name="getReference" id="BpSeq7">
+              <assign name="a_digest" id="BpAss16">
+                <copy>
+                  <from expression="'MESSAGE_DIGEST'"/>
+                  <to variable="diggest_getMiddlewareConfig_InputVariable" part="request" query="/ns9:getMiddlewareConfigRequest/ns9:MiddlewareParam"/>
+                </copy>
+              </assign>
+              <invoke name="digest" inputVariable="diggest_getMiddlewareConfig_InputVariable" outputVariable="diggest_getMiddlewareConfig_OutputVariable" partnerLink="GE03-XMLUtility" portType="ns3:GE03-XMLUtility" operation="getMiddlewareConfig" id="BpInv1"/>
+            </sequence>
+            <sequence name="getLocationDirectory" id="BpSeq8">
+              <assign name="setting_getPath" id="BpAss17">
+                <copy>
+                  <from expression="concat(string(bpws:getVariableData('InputVariable','request','/ns8:Collateral/ns8:collateralType')),'_local')"/>
+                  <to variable="localinput"/>
+                </copy>
+                <copy>
+                  <from expression="concat(string(bpws:getVariableData('InputVariable','request','/ns8:Collateral/ns8:collateralType')),'_ext')"/>
+                  <to variable="extinput"/>
+                </copy>
+              </assign>
+              <assign name="a_localPath" id="BpAss18">
+                <copy>
+                  <from variable="localinput"/>
+                  <to variable="localPath_getLogicalDirectory_InputVariable" part="request" query="/ns9:getLogicalDirectoryRequest/ns9:logicalDirectoryName"/>
+                </copy>
+              </assign>
+              <invoke name="localPath" inputVariable="localPath_getLogicalDirectory_InputVariable" outputVariable="localPath_getLogicalDirectory_OutputVariable" partnerLink="GE03-XMLUtility" portType="ns3:GE03-XMLUtility" operation="getLogicalDirectory" id="BpInv2"/>
+              <assign name="a_extpath" id="BpAss19">
+                <copy>
+                  <from variable="extinput"/>
+                  <to variable="extpath_getLogicalDirectory_InputVariable" part="request" query="/ns9:getLogicalDirectoryRequest/ns9:logicalDirectoryName"/>
+                </copy>
+                <copy>
+                  <from variable="localPath_getLogicalDirectory_OutputVariable" part="reply" query="/ns9:getLogicalDirectoryReply/ns9:logicalDirectory/ns9:physicalPath"/>
+                  <to variable="dirLokal"/>
+                </copy>
+              </assign>
+              <invoke name="extpath" inputVariable="extpath_getLogicalDirectory_InputVariable" outputVariable="extpath_getLogicalDirectory_OutputVariable" partnerLink="GE03-XMLUtility" portType="ns3:GE03-XMLUtility" operation="getLogicalDirectory" id="BpInv3"/>
+              <assign name="assigning" id="BpAss20">
+                <copy>
+                  <from variable="extpath_getLogicalDirectory_OutputVariable" part="reply" query="/ns9:getLogicalDirectoryReply/ns9:logicalDirectory/ns9:physicalPath"/>
+                  <to variable="dirExt"/>
+                </copy>
+              </assign>
+            </sequence>
+          </flow>
+          <sequence name="writeLocal" id="BpSeq9">
+            <assign name="a_write_local" id="BpAss21">
+              <copy>
+                <from variable="temp_collateral" query="/write:kpeiInbound"/>
+                <to variable="writeLocal_Write-Collateral-to-local_InputVariable" part="body" query="/write:kpeiInbound"/>
+              </copy>
+            </assign>
+            <invoke name="writeLocal" inputVariable="writeLocal_Write-Collateral-to-local_InputVariable" partnerLink="Write-Collateral" portType="ns5:Write_Collateral_to_local_ptt" operation="Write-Collateral-to-local" id="BpInv4">
+              <bpelx:inputProperty name="jca.file.Directory" variable="dirLokal"/>
+              <bpelx:inputProperty name="jca.file.FileName" variable="filename"/>
+            </invoke>
+          </sequence>
+          <sequence name="writeExternal" bpelx:skipCondition="oraext:compare-ignore-case(string(bpws:getVariableData('InputVariable','request','/ns8:Collateral/ns8:header/ns8:source')),'MI') = 0" id="BpSeq10">
+            <assign name="a_writeExt" id="BpAss22">
+              <copy>
+                <from variable="dirLokal"/>
+                <to variable="writeExternal_copyFile_InputVariable" part="request" query="/ns10:copyFileRequest/ns10:sourceDirectory"/>
+              </copy>
+              <copy>
+                <from variable="dirExt"/>
+                <to variable="writeExternal_copyFile_InputVariable" part="request" query="/ns10:copyFileRequest/ns10:targetDirectory"/>
+              </copy>
+              <copy>
+                <from variable="filename"/>
+                <to variable="writeExternal_copyFile_InputVariable" part="request" query="/ns10:copyFileRequest/ns10:fileName"/>
+              </copy>
+              <copy>
+                <from expression="xpath20:lower-case(string(bpws:getVariableData('diggest_getMiddlewareConfig_OutputVariable','reply','/ns9:getMiddlewareConfigReply/ns9:Value')))"/>
+                <to variable="writeExternal_copyFile_InputVariable" part="request" query="/ns10:copyFileRequest/ns10:messageDigest"/>
+              </copy>
+            </assign>
+            <invoke name="writeExternal" inputVariable="writeExternal_copyFile_InputVariable" outputVariable="writeExternal_copyFile_OutputVariable" partnerLink="GE02-FileUtility" portType="ns4:GE02-FileUtility" operation="copyFile" id="BpInv5"/>
+            <switch name="Switch_1" id="BpSwt2">
+              <case condition="contains(string(bpws:getVariableData('writeExternal_copyFile_OutputVariable','reply','/ns10:copyFileReply/ns10:status')),'ERROR')">
+                <throw name="ERROR_EXT" faultName="bpws:selectionFailure" id="BpThw0"/>
+              </case>
+              <otherwise/>
+            </switch>
+          </sequence>
+          <sequence name="writeDRC" bpelx:skipCondition="oraext:compare-ignore-case(string(bpws:getVariableData('InputVariable','request','/ns8:Collateral/ns8:header/ns8:source')),'MI') = 0" id="BpSeq11">
+            <scope name="Scope_1" id="BpScp1">
+              <variables>
+                <variable name="drclocation_getLogicalDirectory_InputVariable" messageType="ns3:getLogicalDirectoryRequestMessage"/>
+                <variable name="drclocation_getLogicalDirectory_OutputVariable" messageType="ns3:getLogicalDirectoryReplyMessage"/>
+              </variables>
+              <faultHandlers id="BpFhs2">
+                <catchAll id="BpCAl1">
+                  <empty name="ERROR_ON_DRC" id="BpEmp1"/>
+                </catchAll>
+              </faultHandlers>
+              <sequence id="BpSeq12">
+                <sequence name="getLocation" id="BpSeq13">
+                  <assign name="a_drclocation" id="BpAss23">
+                    <copy>
+                      <from expression="concat(string(bpws:getVariableData('InputVariable','request','/ns8:Collateral/ns8:collateralType')),'_drc')"/>
+                      <to variable="drcinput"/>
+                    </copy>
+                    <copy>
+                      <from variable="drcinput"/>
+                      <to variable="drclocation_getLogicalDirectory_InputVariable" part="request" query="/ns9:getLogicalDirectoryRequest/ns9:logicalDirectoryName"/>
+                    </copy>
+                  </assign>
+                  <invoke name="drclocation" inputVariable="drclocation_getLogicalDirectory_InputVariable" outputVariable="drclocation_getLogicalDirectory_OutputVariable" partnerLink="GE03-XMLUtility" portType="ns3:GE03-XMLUtility" operation="getLogicalDirectory" id="BpInv6"/>
+                  <assign name="dirDRC" id="BpAss24">
+                    <copy>
+                      <from variable="drclocation_getLogicalDirectory_OutputVariable" part="reply" query="/ns9:getLogicalDirectoryReply/ns9:logicalDirectory/ns9:physicalPath"/>
+                      <to variable="dirDRC"/>
+                    </copy>
+                  </assign>
+                </sequence>
+                <assign name="a_writeDRC" id="BpAss25">
+                  <copy>
+                    <from variable="dirLokal"/>
+                    <to variable="writeDRC_copyFile_InputVariable" part="request" query="/ns10:copyFileRequest/ns10:sourceDirectory"/>
+                  </copy>
+                  <copy>
+                    <from variable="dirDRC"/>
+                    <to variable="writeDRC_copyFile_InputVariable" part="request" query="/ns10:copyFileRequest/ns10:targetDirectory"/>
+                  </copy>
+                  <copy>
+                    <from variable="filename"/>
+                    <to variable="writeDRC_copyFile_InputVariable" part="request" query="/ns10:copyFileRequest/ns10:fileName"/>
+                  </copy>
+                  <copy>
+                    <from expression="xpath20:lower-case(string(bpws:getVariableData('diggest_getMiddlewareConfig_OutputVariable','reply','/ns9:getMiddlewareConfigReply/ns9:Value')))"/>
+                    <to variable="writeDRC_copyFile_InputVariable" part="request" query="/ns10:copyFileRequest/ns10:messageDigest"/>
+                  </copy>
+                </assign>
+                <invoke name="writeDRC" inputVariable="writeDRC_copyFile_InputVariable" outputVariable="writeDRC_copyFile_OutputVariable" partnerLink="GE02-FileUtility" portType="ns4:GE02-FileUtility" operation="copyFile" id="BpInv7"/>
+                <switch name="Switch_2" id="BpSwt3">
+                  <case condition="contains(string(bpws:getVariableData('writeDRC_copyFile_OutputVariable','reply','/ns10:copyFileReply/ns10:status')),'ERROR')">
+                    <throw name="ERROR" faultName="bpws:selectionFailure" id="BpThw1"/>
+                  </case>
+                  <otherwise/>
+                </switch>
+              </sequence>
+            </scope>
+          </sequence>
+          <scope name="sc_WI" variableAccessSerializable="no" id="BpScp2">
+            <variables>
+              <variable name="pathWIRequest" messageType="ns3:getLogicalDirectoryRequestMessage"/>
+              <variable name="pathWIReply" messageType="ns3:getLogicalDirectoryReplyMessage"/>
+              <variable name="copyWIRequest" messageType="ns4:copyFileRequestMessage"/>
+              <variable name="copyWIReply" messageType="ns4:copyFileReplyMessage"/>
+            </variables>
+            <faultHandlers id="BpFhs3">
+              <catchAll id="BpCAl2">
+                <empty name="ignore" id="BpEmp3"/>
+              </catchAll>
+            </faultHandlers>
+            <sequence id="BpSeq14">
+              <assign name="as_pathWI" id="BpAss26">
+                <copy>
+                  <from expression="concat(bpws:getVariableData('InputVariable','request','/ns8:Collateral/ns8:collateralType'),'_whatif')"/>
+                  <to variable="pathWIRequest" part="request" query="/ns9:getLogicalDirectoryRequest/ns9:logicalDirectoryName"/>
+                </copy>
+              </assign>
+              <invoke name="inv_pathWI" bpelx:invokeAsDetail="no" inputVariable="pathWIRequest" outputVariable="pathWIReply" partnerLink="GE03-XMLUtility" portType="ns3:GE03-XMLUtility" operation="getLogicalDirectory" id="BpInv8"/>
+              <assign name="as_copyWI" id="BpAss27">
+                <copy>
+                  <from variable="dirLokal"/>
+                  <to variable="copyWIRequest" part="request" query="/ns10:copyFileRequest/ns10:sourceDirectory"/>
+                </copy>
+                <copy>
+                  <from variable="pathWIReply" part="reply" query="/ns9:getLogicalDirectoryReply/ns9:logicalDirectory/ns9:physicalPath"/>
+                  <to variable="copyWIRequest" part="request" query="/ns10:copyFileRequest/ns10:targetDirectory"/>
+                </copy>
+                <copy>
+                  <from variable="filename"/>
+                  <to variable="copyWIRequest" part="request" query="/ns10:copyFileRequest/ns10:fileName"/>
+                </copy>
+                <copy>
+                  <from expression="xpath20:lower-case(string(bpws:getVariableData('diggest_getMiddlewareConfig_OutputVariable','reply','/ns9:getMiddlewareConfigReply/ns9:Value')))"/>
+                  <to variable="copyWIRequest" part="request" query="/ns10:copyFileRequest/ns10:messageDigest"/>
+                </copy>
+              </assign>
+              <invoke name="inv_copyWI" bpelx:invokeAsDetail="no" inputVariable="copyWIRequest" outputVariable="copyWIReply" partnerLink="GE02-FileUtility" portType="ns4:GE02-FileUtility" operation="copyFile" id="BpInv9"/>
+              <switch name="Switch1" id="BpSwt4">
+                <case condition="contains(string(bpws:getVariableData('copyWIReply','reply','/ns10:copyFileReply/ns10:status')),'ERROR')">
+                  <throw name="thr_errWI" faultName="bpws:selectionFailure" id="BpThw2"/>
+                </case>
+                <otherwise>
+                  <empty name="ok" id="BpEmp4"/>
+                </otherwise>
+              </switch>
+            </sequence>
+          </scope>
+        </sequence>
+      </sequence>
+    </scope>
+    <assign name="assignDateZreply" id="BpAss28">
+      <copy>
+        <from expression="concat(xpath20:format-dateTime(xpath20:current-dateTime(),'[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]'),'Z')"/>
+        <to variable="OutputVariable" part="reply" query="/ns6:wsReply/ns6:receiveDateTime"/>
+      </copy>
+    </assign>
+    <reply name="replyOutput" partnerLink="OR11-eCLEARSCollateral" portType="ns1:execute_ptt" operation="sendCollateral" variable="OutputVariable" id="BpRpl1"/>
+  </sequence>
+</process><!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Fri May 07 15:11:41 ICT 2010
+  Author:  medisagn64
+  Purpose: Synchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->

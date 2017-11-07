@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<componentType xmlns="http://xmlns.oracle.com/sca/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ui="http://xmlns.oracle.com/soa/designer/">
+   <service name="eCLEARSCollateral_Med" ui:wsdlLocation="OR16_eCLEARSCollateral.wsdl">
+      <interface.wsdl interface="http://oracle.com/sca/soapservice/MWEASPANSBL/OR11-eCLEARSCollateral/OR16_eCLEARSCollateral#wsdl.interface(OR16-sendCLEARSCollateral_ptt)"/>
+   </service>
+   <reference name="CollateralProcessingBPEL.OR11-eCLEARSCollateral" ui:wsdlLocation="OR11_eCLEARSCollateralRef.wsdl">
+      <interface.wsdl interface="http://oracle.com/sca/soapservice/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/OR11_eCLEARSCollateral#wsdl.interface(execute_ptt)"/>
+   </reference>
+</componentType>

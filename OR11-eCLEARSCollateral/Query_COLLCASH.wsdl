@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions name="Query_COLLCASH" targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Query_COLLCASH" xmlns:db="http://xmlns.oracle.com/pcbpel/adapter/db/COLLCASH" xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Query_COLLCASH" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/">
+   <plt:partnerLinkType name="Query_COLLCASH_plt">
+      <plt:role name="Query_COLLCASH_role">
+         <plt:portType name="tns:Query_COLLCASH_ptt"/>
+      </plt:role>
+   </plt:partnerLinkType>
+   <wsdl:types>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema">
+         <import namespace="http://xmlns.oracle.com/pcbpel/adapter/db/COLLCASH" schemaLocation="xsd/Query_COLLCASH.xsd"/>
+      </schema>
+   </wsdl:types>
+   <wsdl:message name="COLLCASHInput_msg">
+      <wsdl:part name="COLLCASHInput_msg" element="db:COLLCASHInput"/>
+   </wsdl:message>
+   <wsdl:message name="COLLCASHOutputCollection_msg">
+      <wsdl:part name="COLLCASHOutputCollection" element="db:COLLCASHOutputCollection"/>
+   </wsdl:message>
+   <wsdl:portType name="Query_COLLCASH_ptt">
+      <wsdl:operation name="Query_COLLCASH">
+         <wsdl:input message="tns:COLLCASHInput_msg"/>
+         <wsdl:output message="tns:COLLCASHOutputCollection_msg"/>
+      </wsdl:operation>
+   </wsdl:portType>
+</wsdl:definitions>

@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions name="JMSTrigger" targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/JMSTrigger" xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/JMSTrigger" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:imp1="http://www.kpei.co.id/razor/trigger/e-CLEARSCollateral" xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/">
+   <plt:partnerLinkType name="Consume_Message_JMSMessage_plt">
+      <plt:role name="Consume_Message_JMSMessage_role">
+         <plt:portType name="tns:Consume_Message_JMSMessage_ptt"/>
+      </plt:role>
+   </plt:partnerLinkType>
+   <wsdl:types>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema">
+         <import namespace="http://www.kpei.co.id/razor/trigger/e-CLEARSCollateral" schemaLocation="xsd/CollateralInterface.xsd"/>
+      </schema>
+   </wsdl:types>
+   <wsdl:message name="Consume_Message_JMSMessage_msg">
+      <wsdl:part name="body" element="imp1:TriggerElement"/>
+   </wsdl:message>
+   <wsdl:portType name="Consume_Message_JMSMessage_ptt">
+      <wsdl:operation name="Consume_Message_JMSMessage">
+         <wsdl:input message="tns:Consume_Message_JMSMessage_msg"/>
+      </wsdl:operation>
+   </wsdl:portType>
+</wsdl:definitions>

@@ -1,0 +1,5 @@
+8 Maret 2016
+Hapus JMS Queue:
+- jms/eclears/eCLEARSCollateralUpdateQueue
+- jms/eclears/eCLEARSCollateralUpdateResponseQueue
+- eis/jms/eclearsCollateralUpdateResponse

@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<componentType xmlns="http://xmlns.oracle.com/sca/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ui="http://xmlns.oracle.com/soa/designer/">
+   <service name="colcashhelper_client" ui:wsdlLocation="ColCashHelper.wsdl">
+      <interface.wsdl interface="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/ColCashHelper#wsdl.interface(ColCashHelper)"/>
+   </service>
+   <reference name="CollCashBPEL.collcashbpel_client" ui:wsdlLocation="CollCashBPEL.wsdl">
+      <interface.wsdl interface="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashBPEL#wsdl.interface(CollCashBPEL)" callbackInterface="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashBPEL#wsdl.interface(CollCashBPELCallback)"/>
+   </reference>
+   <reference name="CollateralProcessingBPEL.OR11-eCLEARSCollateral" ui:wsdlLocation="OR11_eCLEARSCollateralRef.wsdl">
+      <interface.wsdl interface="http://oracle.com/sca/soapservice/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/OR11_eCLEARSCollateral#wsdl.interface(execute_ptt)"/>
+   </reference>
+   <reference name="JMSReply" ui:wsdlLocation="JMSReply.wsdl">
+      <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/JMSReply#wsdl.interface(Produce_eCLEARSCollateralQueue_ptt)"/>
+   </reference>
+</componentType>

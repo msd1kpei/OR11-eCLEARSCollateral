@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/db/Rownum_CollEquity" xmlns="http://xmlns.oracle.com/pcbpel/adapter/db/Rownum_CollEquity" elementFormDefault="qualified" attributeFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:element name="Rownum_CollEquityInput" type="Rownum_CollEquityInput"/>
+   <xs:complexType name="Rownum_CollEquityInput">
+      <xs:sequence/>
+   </xs:complexType>
+   <xs:element name="Rownum_CollEquityOutput" type="Rownum_CollEquityOutput"/>
+   <xs:complexType name="Rownum_CollEquityOutput">
+      <xs:sequence>
+         <xs:element name="id_acct_capco" type="xs:decimal" nillable="true"/>
+      </xs:sequence>
+   </xs:complexType>
+</xs:schema>

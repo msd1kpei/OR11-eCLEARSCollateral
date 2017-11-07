@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions name="Rownum_CollEquity" targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Rownum_CollEquity" xmlns:db="http://xmlns.oracle.com/pcbpel/adapter/db/Rownum_CollEquity" xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Rownum_CollEquity" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/">
+   <plt:partnerLinkType name="Rownum_CollEquity_plt">
+      <plt:role name="Rownum_CollEquity_role">
+         <plt:portType name="tns:Rownum_CollEquity_ptt"/>
+      </plt:role>
+   </plt:partnerLinkType>
+   <wsdl:types>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema">
+         <import namespace="http://xmlns.oracle.com/pcbpel/adapter/db/Rownum_CollEquity" schemaLocation="xsd/Rownum_CollEquity.xsd"/>
+      </schema>
+   </wsdl:types>
+   <wsdl:message name="Rownum_CollEquityInput_msg">
+      <wsdl:part name="Rownum_CollEquityInput_msg" element="db:Rownum_CollEquityInput"/>
+   </wsdl:message>
+   <wsdl:message name="Rownum_CollEquityOutput_msg">
+      <wsdl:part name="Rownum_CollEquityOutput" element="db:Rownum_CollEquityOutput"/>
+   </wsdl:message>
+   <wsdl:portType name="Rownum_CollEquity_ptt">
+      <wsdl:operation name="Rownum_CollEquity">
+         <wsdl:input message="tns:Rownum_CollEquityInput_msg"/>
+         <wsdl:output message="tns:Rownum_CollEquityOutput_msg"/>
+      </wsdl:operation>
+   </wsdl:portType>
+</wsdl:definitions>

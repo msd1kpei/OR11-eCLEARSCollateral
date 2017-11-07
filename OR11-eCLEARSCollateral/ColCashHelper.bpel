@@ -1,0 +1,191 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Wed May 12 14:19:45 ICT 2010
+  Author:  medisagn64
+  Purpose: One Way BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="ColCashHelper"
+               targetNamespace="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/ColCashHelper"
+               xmlns="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+               xmlns:client="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/ColCashHelper"
+               xmlns:ora="http://schemas.oracle.com/xpath/extension"
+               xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:ns1="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashBPEL"
+         xmlns:ns2="http://oracle.com/sca/soapservice/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/OR11_eCLEARSCollateral"
+         xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+         xmlns:ns3="http://www.kpei.co.id/razor/trigger/e-CLEARSCollateral"
+         xmlns:ns4="http://www.kpei.co.id/schema/OnlineCollateral.001"
+         xmlns:ns5="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/JMSReply"
+         xmlns:xpath20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20"
+         xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc"
+         xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue"
+         xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
+         xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions"
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap"
+         xmlns:ns6="http://kpei.co.id/MDwsReply.xsd">
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      PARTNERLINKS                                                      
+      List of services participating in this BPEL process               
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  --> 
+  <partnerLinks>
+    <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+    <partnerLink name="colcashhelper_client" partnerLinkType="client:ColCashHelper" myRole="ColCashHelperProvider"/>
+    <partnerLink myRole="CollCashBPELRequester"
+                 name="CollCashBPEL.collcashbpel_client"
+                 partnerRole="CollCashBPELProvider"
+                 partnerLinkType="ns1:CollCashBPEL"/>
+    <partnerLink name="CollateralProcessingBPEL.OR11-eCLEARSCollateral"
+                 partnerRole="execute_ptt"
+                 partnerLinkType="ns2:OR11-eCLEARSCollateral"/>
+    <partnerLink name="JMSReply"
+                 partnerRole="Produce_eCLEARSCollateralQueue_role"
+                 partnerLinkType="ns5:Produce_eCLEARSCollateralQueue_plt"/>
+  </partnerLinks>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      VARIABLES                                                        
+      List of messages and XML documents used within this BPEL process 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <variables>
+    <!-- Reference to the message passed as input during initiation -->
+    <variable name="inputVariable" messageType="client:ColCashHelperRequestMessage"/>
+    <variable name="QueryCollCash_process_InputVariable"
+              messageType="ns1:CollCashBPELRequestMessage"/>
+    <variable name="ReturnCollCash_processResponse_InputVariable"
+              messageType="ns1:CollCashBPELResponseMessage"/>
+    <variable name="CollteralProcessing_sendCollateral_InputVariable"
+              messageType="ns2:requestMessage"/>
+    <variable name="CollteralProcessing_sendCollateral_OutputVariable"
+              messageType="ns2:replyMessage"/>
+    <variable name="JMSReply_Produce_eCLEARSCollateralQueue_InputVariable"
+              messageType="ns5:Produce_eCLEARSCollateralQueue_msg"/>
+    <variable name="invalidVar" messageType="bpelx:RuntimeFaultMessage"/>
+  </variables>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ORCHESTRATION LOGIC                                               
+     Set of activities coordinating the flow of messages across the    
+     services integrated within this business process                  
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <sequence name="main">
+
+    <!-- Receive input from requestor. (Note: This maps to operation defined in ColCashHelper.wsdl) -->
+    <receive name="receiveInput" partnerLink="colcashhelper_client" portType="client:ColCashHelper" operation="process" variable="inputVariable" createInstance="yes"/>
+    <assign name="assign_success">
+      <copy>
+        <from expression="xpath20:current-dateTime()"/>
+        <to variable="JMSReply_Produce_eCLEARSCollateralQueue_InputVariable"
+            part="body" query="/ns6:wsReply/ns6:receiveDateTime"/>
+      </copy>
+      <copy>
+        <from expression="'SUCCESS'"/>
+        <to variable="JMSReply_Produce_eCLEARSCollateralQueue_InputVariable"
+            part="body" query="/ns6:wsReply/ns6:status"/>
+      </copy>
+      <copy>
+        <from expression="'Success sending process query to ARMS, and execute Collateral Processing.'"/>
+        <to variable="JMSReply_Produce_eCLEARSCollateralQueue_InputVariable"
+            part="body" query="/ns6:wsReply/ns6:description"/>
+      </copy>
+    </assign>
+    <scope name="Scope_1">
+      <faultHandlers>
+        <catch faultName="bpelx:invalidVariables" faultVariable="invalidVar">
+          <assign name="a_Invalid">
+            <copy>
+              <from expression="xpath20:current-dateTime()"/>
+              <to variable="JMSReply_Produce_eCLEARSCollateralQueue_InputVariable"
+                  part="body" query="/ns6:wsReply/ns6:receiveDateTime"/>
+            </copy>
+            <copy>
+              <from expression="'ERROR'"/>
+              <to variable="JMSReply_Produce_eCLEARSCollateralQueue_InputVariable"
+                  part="body" query="/ns6:wsReply/ns6:status"/>
+            </copy>
+            <copy>
+              <from expression="string(bpws:getVariableData('invalidVar','summary'))"/>
+              <to variable="JMSReply_Produce_eCLEARSCollateralQueue_InputVariable"
+                  part="body" query="/ns6:wsReply/ns6:description"/>
+            </copy>
+          </assign>
+        </catch>
+        <catchAll>
+          <assign name="query_failed">
+            <copy>
+              <from expression="xpath20:current-dateTime()"/>
+              <to variable="JMSReply_Produce_eCLEARSCollateralQueue_InputVariable"
+                  part="body" query="/ns6:wsReply/ns6:receiveDateTime"/>
+            </copy>
+            <copy>
+              <from expression="'ERROR'"/>
+              <to variable="JMSReply_Produce_eCLEARSCollateralQueue_InputVariable"
+                  part="body" query="/ns6:wsReply/ns6:status"/>
+            </copy>
+            <copy>
+              <from expression="'Failed sending process query to ARMS, and execute Collateral Processing. Check either the query result is empty or Database not found.'"/>
+              <to variable="JMSReply_Produce_eCLEARSCollateralQueue_InputVariable"
+                  part="body" query="/ns6:wsReply/ns6:description"/>
+            </copy>
+          </assign>
+        </catchAll>
+      </faultHandlers>
+      <sequence name="CollCashProcessing">
+        <bpelx:validate name="inputValidation" variables="inputVariable"/>
+        <assign name="a_QueryCollcash">
+          <copy>
+            <from variable="inputVariable" part="payload"
+                  query="/ns3:TriggerElement"/>
+            <to variable="QueryCollCash_process_InputVariable" part="payload"
+                query="/ns3:TriggerElement"/>
+          </copy>
+        </assign>
+        <invoke name="QueryCollCash"
+                inputVariable="QueryCollCash_process_InputVariable"
+                partnerLink="CollCashBPEL.collcashbpel_client"
+                portType="ns1:CollCashBPEL" operation="process"/>
+        <receive name="ReturnCollCash" createInstance="no"
+                 variable="ReturnCollCash_processResponse_InputVariable"
+                 partnerLink="CollCashBPEL.collcashbpel_client"
+                 portType="ns1:CollCashBPELCallback"
+                 operation="processResponse"/>
+        <sequence name="sendCollCash">
+          <assign name="a_CollateralProcessing">
+            <bpelx:annotation>
+              <bpelx:pattern>transformation</bpelx:pattern>
+            </bpelx:annotation>
+            <copy>
+              <from expression="ora:doXSLTransformForDoc('xsl/CollCash_CollateralProcessing.xsl',bpws:getVariableData('inputVariable','payload'),'ReturnCollCash_processResponse_InputVariable.payload',bpws:getVariableData('ReturnCollCash_processResponse_InputVariable','payload'))"/>
+              <to variable="CollteralProcessing_sendCollateral_InputVariable"
+                  part="request"/>
+            </copy>
+          </assign>
+          <invoke name="CollteralProcessing"
+                  inputVariable="CollteralProcessing_sendCollateral_InputVariable"
+                  outputVariable="CollteralProcessing_sendCollateral_OutputVariable"
+                  partnerLink="CollateralProcessingBPEL.OR11-eCLEARSCollateral"
+                  portType="ns2:execute_ptt" operation="sendCollateral"/>
+        </sequence>
+      </sequence>
+    </scope>
+    <invoke name="JMSReply"
+            inputVariable="JMSReply_Produce_eCLEARSCollateralQueue_InputVariable"
+            partnerLink="JMSReply"
+            portType="ns5:Produce_eCLEARSCollateralQueue_ptt"
+            operation="Produce_eCLEARSCollateralQueue"/>
+  </sequence>
+</process>

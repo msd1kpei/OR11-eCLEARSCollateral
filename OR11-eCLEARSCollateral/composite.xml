@@ -1,0 +1,209 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<composite name="OR11-eCLEARSCollateral" applicationName="default" revision="3.4" label="soa_14242270-7fa8-495c-95bc-6d21e3d5cb93" mode="active" state="on" home="/soa1/app/oracle/admin/kpeicluster/Node1/mserver/kpeicluster/servers/wls_soa1/dc/soa_14242270-7fa8-495c-95bc-6d21e3d5cb93" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://xmlns.oracle.com/sca/1.0" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:orawsp="http://schemas.oracle.com/ws/2006/01/policy" xmlns:ui="http://xmlns.oracle.com/soa/designer/">
+   <import location="Query_COLLCASH.wsdl" importType="wsdl" namespace="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Query_COLLCASH"/>
+   <import location="Query_COLLEQUITY.wsdl" importType="wsdl" namespace="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Query_COLLEQUITY"/>
+   <import location="TotalRow_COLLCASH.wsdl" importType="wsdl" namespace="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/TotalRow_COLLCASH"/>
+   <import location="Rownum_CollEquity.wsdl" importType="wsdl" namespace="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Rownum_CollEquity"/>
+   <import location="CollCashEquity.wsdl" importType="wsdl" namespace="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashEquity"/>
+   <import location="CollCashBPEL.wsdl" importType="wsdl" namespace="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashBPEL"/>
+   <import location="http://SERVICESERVER:7777/soa-infra/services/default/GE01-MessageMonitor/GE01-MessageMonitor?WSDL" importType="wsdl" namespace="http://oracle.com/sca/soapservice/KPEI-MIDDLEWARE/Ge01-messageMonitor/messageMonitorService"/>
+   <import location="http://SERVICESERVER:7777/soa-infra/services/default/GE03-XMLUtility/GE03-XMLUtility.wsdl" importType="wsdl" namespace="http://oracle.com/sca/soapservice/kpei/GE03-XMLUtility/GE03_XMLUtility"/>
+   <import location="http://SERVICESERVER:7777/kpei/GE02-FileUtility?wsdl" importType="wsdl" namespace="http://www.kpei.co.id/GE02-FileUtility"/>
+   <import location="OR11_eCLEARSCollateral.wsdl" importType="wsdl" namespace="http://oracle.com/sca/soapservice/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/OR11_eCLEARSCollateral"/>
+   <import location="OR11_eCLEARSCollateralRef.wsdl" importType="wsdl" namespace="http://oracle.com/sca/soapservice/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/OR11_eCLEARSCollateral"/>
+   <import location="GE03-XMLUtilityRef.wsdl" importType="wsdl" namespace="http://oracle.com/sca/soapservice/kpei/GE03-XMLUtility/GE03_XMLUtility"/>
+   <import location="GE02-FileUtility.wsdl" importType="wsdl" namespace="http://www.kpei.co.id/GE02-FileUtility"/>
+   <import location="Write_Collateral.wsdl" importType="wsdl" namespace="http://xmlns.oracle.com/pcbpel/adapter/file/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Write_Collateral"/>
+   <import location="JMSTrigger.wsdl" importType="wsdl" namespace="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/JMSTrigger"/>
+   <import location="ColCashHelper.wsdl" importType="wsdl" namespace="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/ColCashHelper"/>
+   <import location="CollEquityHelper.wsdl" importType="wsdl" namespace="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollEquityHelper"/>
+   <import location="JMSReply.wsdl" importType="wsdl" namespace="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/JMSReply"/>
+   <import namespace="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Inbound_CollateralQueue" location="Inbound_CollateralQueue.wsdl" importType="wsdl"/>
+   <import namespace="http://xmlns.oracle.com/MW-OSB/sendResponeMsg/sendResponsemsg" location="Outbound.wsdl" importType="wsdl"/>
+   <import namespace="http://xmlns.oracle.com/ARIS_KPEI_PROJECT/OR11_eCLEARSCollateral/PrepareCollateralAck" location="PrepareCollateralAck.wsdl" importType="wsdl"/>
+   <service name="OR11-eCLEARSCollateral">
+      <interface.wsdl interface="http://oracle.com/sca/soapservice/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/OR11_eCLEARSCollateral#wsdl.interface(execute_ptt)"/>
+      <binding.ws port="http://oracle.com/sca/soapservice/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/OR11_eCLEARSCollateral#wsdl.endpoint(OR11-eCLEARSCollateral/execute_pt)" streamIncomingAttachments="false" streamOutgoingAttachments="false"/>
+   </service>
+   <service name="JMSTrigger">
+      <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/JMSTrigger#wsdl.interface(Consume_Message_JMSMessage_ptt)"/>
+      <binding.jca config="JMSTrigger_jms.jca" portType="Consume_Message_JMSMessage_ptt" operation="Consume_Message_JMSMessage">
+         <property name="singleton" type="xs:boolean" many="false" override="may">true</property>
+      </binding.jca>
+   </service>
+   <service name="Inbound.CollateralQueue" ui:wsdlLocation="Inbound_CollateralQueue.wsdl">
+      <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Inbound_CollateralQueue#wsdl.interface(Consume_Message_ptt)"/>
+      <binding.jca config="Inbound.CollateralQueue_jms.jca"/>
+   </service>
+   <property name="auditLevel" many="false">Development</property>
+   <property name="validateSchema" type="xs:boolean" many="false">false</property>
+   <component name="JMsMediator">
+      <implementation.mediator src="JMsMediator.mplan"/>
+      <property name="isResequencing" many="false" override="may">false</property>
+      <business-events/>
+   </component>
+   <component name="CollCashEquity">
+      <implementation.bpel src="CollCashEquity.bpel"/>
+      <business-events/>
+   </component>
+   <component name="ColCashHelper">
+      <implementation.bpel src="ColCashHelper.bpel"/>
+      <business-events/>
+   </component>
+   <component name="CollEquityHelper">
+      <implementation.bpel src="CollEquityHelper.bpel"/>
+      <business-events/>
+   </component>
+   <component name="CollCashBPEL">
+      <implementation.bpel src="CollCashBPEL.bpel"/>
+      <business-events/>
+   </component>
+   <component name="CollateralProcessingBPEL">
+      <implementation.bpel src="CollateralProcessingBPEL.bpel"/>
+      <business-events/>
+   </component>
+   <component name="RouteCollateralQueue">
+      <implementation.mediator src="RouteCollateralQueue.mplan"/>
+   </component>
+   <component name="PrepareCollateralAck" version="1.1">
+      <implementation.bpel src="PrepareCollateralAck.bpel"/>
+   </component>
+   <reference name="Write-Collateral">
+      <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/file/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Write_Collateral#wsdl.interface(Write_Collateral_to_local_ptt)"/>
+      <binding.jca config="Write-Collateral_file.jca" portType="Write_Collateral_to_local_ptt"/>
+   </reference>
+   <reference name="GE03-XMLUtility">
+      <interface.wsdl interface="http://oracle.com/sca/soapservice/kpei/GE03-XMLUtility/GE03_XMLUtility#wsdl.interface(GE03-XMLUtility)"/>
+      <binding.ws port="http://oracle.com/sca/soapservice/kpei/GE03-XMLUtility/GE03_XMLUtility#wsdl.endpoint(GE03-XMLUtility/GE03-XMLUtility_pt)" location="http://SERVICESERVER:7777/soa-infra/services/default/GE03-XMLUtility/GE03-XMLUtility?WSDL" streamIncomingAttachments="false" streamOutgoingAttachments="false"/>
+   </reference>
+   <reference name="Query_COLLCASH">
+      <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Query_COLLCASH#wsdl.interface(Query_COLLCASH_ptt)"/>
+      <binding.jca config="Query_COLLCASH_db.jca" portType="Query_COLLCASH_ptt"/>
+      <property name="jca.retry.count" type="xs:int" many="false" override="may">4</property>
+      <property name="jca.retry.backoff" type="xs:int" many="false" override="may">2</property>
+      <property name="jca.retry.interval" type="xs:int" many="false" override="may">1</property>
+      <property name="jca.retry.maxInterval" type="xs:string" many="false" override="may">120</property>
+   </reference>
+   <reference name="JMSReply">
+      <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/JMSReply#wsdl.interface(Produce_eCLEARSCollateralQueue_ptt)"/>
+      <binding.jca config="JMSReply_jms.jca" portType="Produce_eCLEARSCollateralQueue_ptt"/>
+   </reference>
+   <reference name="TotalRow_COLLCASH">
+      <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/TotalRow_COLLCASH#wsdl.interface(TotalRow_COLLCASH_ptt)"/>
+      <binding.jca config="TotalRow_COLLCASH_db.jca" portType="TotalRow_COLLCASH_ptt"/>
+      <property name="jca.retry.count" type="xs:int" many="false" override="may">4</property>
+      <property name="jca.retry.backoff" type="xs:int" many="false" override="may">2</property>
+      <property name="jca.retry.interval" type="xs:int" many="false" override="may">1</property>
+      <property name="jca.retry.maxInterval" type="xs:string" many="false" override="may">120</property>
+   </reference>
+   <reference name="Query_COLLEQUITY">
+      <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Query_COLLEQUITY#wsdl.interface(Query_COLLEQUITY_ptt)"/>
+      <binding.jca config="Query_COLLEQUITY_db.jca" portType="Query_COLLEQUITY_ptt"/>
+      <property name="jca.retry.count" type="xs:int" many="false" override="may">4</property>
+      <property name="jca.retry.backoff" type="xs:int" many="false" override="may">2</property>
+      <property name="jca.retry.interval" type="xs:int" many="false" override="may">1</property>
+      <property name="jca.retry.maxInterval" type="xs:string" many="false" override="may">120</property>
+   </reference>
+   <reference name="GE02-FileUtility">
+      <interface.wsdl interface="http://www.kpei.co.id/GE02-FileUtility#wsdl.interface(GE02-FileUtility)"/>
+      <binding.ws port="http://www.kpei.co.id/GE02-FileUtility#wsdl.endpoint(GE02-FileUtility/GE02-FileUtility)" location="http://SERVICESERVER:7777/kpei/GE02-FileUtility?wsdl" streamIncomingAttachments="false" streamOutgoingAttachments="false"/>
+   </reference>
+   <reference name="Rownum_CollEquity">
+      <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Rownum_CollEquity#wsdl.interface(Rownum_CollEquity_ptt)"/>
+      <binding.jca config="Rownum_CollEquity_db.jca" portType="Rownum_CollEquity_ptt"/>
+      <property name="jca.retry.count" type="xs:int" many="false" override="may">4</property>
+      <property name="jca.retry.backoff" type="xs:int" many="false" override="may">2</property>
+      <property name="jca.retry.interval" type="xs:int" many="false" override="may">1</property>
+      <property name="jca.retry.maxInterval" type="xs:string" many="false" override="may">120</property>
+   </reference>
+   <reference name="ResponseMessageSender" ui:wsdlLocation="Outbound.wsdl">
+      <interface.wsdl interface="http://xmlns.oracle.com/MW-OSB/sendResponeMsg/sendResponsemsg#wsdl.interface(sendResponsemsg_ptt)"/>
+      <binding.ws port="http://xmlns.oracle.com/MW-OSB/sendResponeMsg/sendResponsemsg#wsdl.endpoint(execute_bindQSService/execute_bindQSPort)" location="Outbound.wsdl" soapVersion="1.1">
+         <property name="weblogic.wsee.wsat.transaction.flowOption" type="xs:string" many="false">WSDLDriven</property>
+      </binding.ws>
+   </reference>
+   <wire>
+      <source.uri>CollCashBPEL/Query_COLLCASH</source.uri>
+      <target.uri>Query_COLLCASH</target.uri>
+   </wire>
+   <wire>
+      <source.uri>ColCashHelper/JMSReply</source.uri>
+      <target.uri>JMSReply</target.uri>
+   </wire>
+   <wire>
+      <source.uri>ColCashHelper/CollateralProcessingBPEL.OR11-eCLEARSCollateral</source.uri>
+      <target.uri>CollateralProcessingBPEL/OR11-eCLEARSCollateral</target.uri>
+   </wire>
+   <wire>
+      <source.uri>CollateralProcessingBPEL/Write-Collateral</source.uri>
+      <target.uri>Write-Collateral</target.uri>
+   </wire>
+   <wire>
+      <source.uri>JMsMediator/CollEquityHelper.collequityhelper_client</source.uri>
+      <target.uri>CollEquityHelper/collequityhelper_client</target.uri>
+   </wire>
+   <wire>
+      <source.uri>JMsMediator/ColCashHelper.colcashhelper_client</source.uri>
+      <target.uri>ColCashHelper/colcashhelper_client</target.uri>
+   </wire>
+   <wire>
+      <source.uri>CollEquityHelper/CollateralProcessingBPEL.OR11-eCLEARSCollateral</source.uri>
+      <target.uri>CollateralProcessingBPEL/OR11-eCLEARSCollateral</target.uri>
+   </wire>
+   <wire>
+      <source.uri>CollateralProcessingBPEL/GE03-XMLUtility</source.uri>
+      <target.uri>GE03-XMLUtility</target.uri>
+   </wire>
+   <wire>
+      <source.uri>CollCashEquity/Rownum_CollEquity</source.uri>
+      <target.uri>Rownum_CollEquity</target.uri>
+   </wire>
+   <wire>
+      <source.uri>CollEquityHelper/CollCashEquity.collcashequity_client</source.uri>
+      <target.uri>CollCashEquity/collcashequity_client</target.uri>
+   </wire>
+   <wire>
+      <source.uri>ColCashHelper/CollCashBPEL.collcashbpel_client</source.uri>
+      <target.uri>CollCashBPEL/collcashbpel_client</target.uri>
+   </wire>
+   <wire>
+      <source.uri>CollEquityHelper/JMSReply</source.uri>
+      <target.uri>JMSReply</target.uri>
+   </wire>
+   <wire>
+      <source.uri>OR11-eCLEARSCollateral</source.uri>
+      <target.uri>CollateralProcessingBPEL/OR11-eCLEARSCollateral</target.uri>
+   </wire>
+   <wire>
+      <source.uri>CollCashEquity/Query_COLLEQUITY</source.uri>
+      <target.uri>Query_COLLEQUITY</target.uri>
+   </wire>
+   <wire>
+      <source.uri>CollCashBPEL/TotalRow_COLLCASH</source.uri>
+      <target.uri>TotalRow_COLLCASH</target.uri>
+   </wire>
+   <wire>
+      <source.uri>JMSTrigger</source.uri>
+      <target.uri>JMsMediator/JMsMediator</target.uri>
+   </wire>
+   <wire>
+      <source.uri>CollateralProcessingBPEL/GE02-FileUtility</source.uri>
+      <target.uri>GE02-FileUtility</target.uri>
+   </wire>
+   <wire>
+      <source.uri>Inbound.CollateralQueue</source.uri>
+      <target.uri>RouteCollateralQueue/RouteCollateralQueue</target.uri>
+   </wire>
+   <wire>
+      <source.uri>RouteCollateralQueue/PrepareCollateralAck.preparecollateralack_client</source.uri>
+      <target.uri>PrepareCollateralAck/preparecollateralack_client</target.uri>
+   </wire>
+   <wire>
+      <source.uri>PrepareCollateralAck/CollateralProcessingBPEL.OR11-eCLEARSCollateral</source.uri>
+      <target.uri>CollateralProcessingBPEL/OR11-eCLEARSCollateral</target.uri>
+   </wire>
+   <wire>
+      <source.uri>RouteCollateralQueue/ResponseMessageSender</source.uri>
+      <target.uri>ResponseMessageSender</target.uri>
+   </wire>
+</composite>

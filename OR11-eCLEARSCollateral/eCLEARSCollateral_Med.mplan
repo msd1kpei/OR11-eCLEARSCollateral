@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Mediator name="eCLEARSCollateral_Med" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.oracle.com/sca/1.0/mediator" wsdlTargetNamespace="http://oracle.com/sca/soapservice/MWEASPANSBL/OR11-eCLEARSCollateral/OR16_eCLEARSCollateral">
+   <operation name="OR16-sendCLEARSCollateral" deliveryPolicy="AllOrNothing" priority="4" validateSchema="false">
+      <switch>
+         <case executionType="direct" name="CollateralProcessingBPEL.OR11-eCLEARSCollateral.sendCollateral">
+            <action>
+               <transform>
+                  <part name="$out.request" function="xslt(xsl/Collateral_To_Collateral.xsl, $in.part1)"/>
+               </transform>
+               <invoke reference="CollateralProcessingBPEL.OR11-eCLEARSCollateral" operation="sendCollateral">
+                  <onReply>
+                     <transform>
+                        <part name="$out.part1" function="xslt(xsl/wsReply_To_wsReply_2.xsl, $in.reply)"/>
+                     </transform>
+                     <reply/>
+                  </onReply>
+               </invoke>
+            </action>
+         </case>
+      </switch>
+   </operation>
+</Mediator>

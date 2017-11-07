@@ -1,0 +1,180 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Thu May 06 09:39:29 ICT 2010
+  Author:  medisagn64
+  Purpose: Asynchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="CollCashEquity"
+         targetNamespace="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashEquity"
+         xmlns="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:client="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashEquity"
+         xmlns:ora="http://schemas.oracle.com/xpath/extension"
+         xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+         xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Rownum_CollEquity"
+         xmlns:ns2="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Query_COLLEQUITY"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+         xmlns:ns3="http://xmlns.oracle.com/pcbpel/adapter/db/Rownum_CollEquity"
+         xmlns:ns4="http://www.kpei.co.id/razor/trigger/e-CLEARSCollateral"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:xpath20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20"
+         xmlns:mhdr="http://www.oracle.com/XSL/Transform/java/oracle.tip.mediator.service.common.functions.MediatorExtnFunction"
+         xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc"
+         xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue"
+         xmlns:hwf="http://xmlns.oracle.com/bpel/workflow/xpath"
+         xmlns:med="http://schemas.oracle.com/mediator/xpath"
+         xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
+         xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
+         xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions"
+         xmlns:socket="http://www.oracle.com/XSL/Transform/java/oracle.tip.adapter.socket.ProtocolTranslator"
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap"
+         xmlns:ns5="http://xmlns.oracle.com/pcbpel/adapter/db/Query_COLLEQUITY"
+         xmlns:ns6="http://oracle.com/sca/soapservice/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/OR11_eCLEARSCollateral">
+
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        PARTNERLINKS                                                      
+        List of services participating in this BPEL process               
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    --> 
+    <partnerLinks>
+        <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+        <partnerLink name="collcashequity_client" partnerLinkType="client:CollCashEquity" myRole="CollCashEquityProvider" partnerRole="CollCashEquityRequester"/>
+        <partnerLink name="Rownum_CollEquity"
+                     partnerRole="Rownum_CollEquity_role"
+                     partnerLinkType="ns1:Rownum_CollEquity_plt"/>
+        <partnerLink name="Query_COLLEQUITY" partnerRole="Query_COLLEQUITY_role"
+                     partnerLinkType="ns2:Query_COLLEQUITY_plt"/>
+    </partnerLinks>
+
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        VARIABLES                                                        
+        List of messages and XML documents used within this BPEL process 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+    <variables>
+        <!-- Reference to the message passed as input during initiation -->
+        <variable name="inputVariable" messageType="client:CollCashEquityRequestMessage"/>
+
+        <!-- Reference to the message that will be sent back to the requester during callback -->
+        <variable name="outputVariable" messageType="client:CollCashEquityResponseMessage"/>
+        <variable name="totalRow_Rownum_CollEquity_InputVariable"
+                  messageType="ns1:Rownum_CollEquityInput_msg"/>
+        <variable name="totalRow_Rownum_CollEquity_OutputVariable"
+                  messageType="ns1:Rownum_CollEquityOutput_msg"/>
+        <variable name="totalRow" type="xsd:decimal"/>
+        <variable name="hinum" type="xsd:decimal"/>
+        <variable name="lownum" type="xsd:decimal"/>
+        <variable name="collEquity_Query_COLLEQUITY_InputVariable"
+                  messageType="ns2:Query_COLLEQUITYInput_msg"/>
+        <variable name="collEquity_Query_COLLEQUITY_OutputVariable"
+                  messageType="ns2:Query_COLLEQUITYOutputCollection_msg"/>
+        <variable name="temp_collEquity"
+                  element="ns5:Query_COLLEQUITYOutputCollection"/>
+    </variables>
+
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+       ORCHESTRATION LOGIC                                               
+       Set of activities coordinating the flow of messages across the    
+       services integrated within this business process                  
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+    <sequence name="main">
+        <!-- Receive input from requestor. (Note: This maps to operation defined in CollCashEquity.wsdl) -->
+        <receive name="receiveInput" partnerLink="collcashequity_client" portType="client:CollCashEquity" operation="process" variable="inputVariable" createInstance="yes"/>
+
+        <!-- 
+          Asynchronous callback to the requester. (Note: the callback location and correlation id is transparently handled using WS-addressing.)
+        -->
+        <sequence name="get_total_row">
+            <invoke name="totalRow"
+                    inputVariable="totalRow_Rownum_CollEquity_InputVariable"
+                    outputVariable="totalRow_Rownum_CollEquity_OutputVariable"
+                    partnerLink="Rownum_CollEquity"
+                    portType="ns1:Rownum_CollEquity_ptt"
+                    operation="Rownum_CollEquity"/>
+            <assign name="a_totalRow">
+                <copy>
+                    <from variable="totalRow_Rownum_CollEquity_OutputVariable"
+                          part="Rownum_CollEquityOutput"
+                          query="/ns3:Rownum_CollEquityOutput/ns3:id_acct_capco"/>
+                    <to variable="totalRow"/>
+                </copy>
+            </assign>
+        </sequence>
+        <assign name="inisialisasi">
+            <copy>
+                <from expression="1"/>
+                <to variable="lownum"/>
+            </copy>
+            <copy>
+                <from variable="inputVariable" part="payload"
+                      query="/ns4:TriggerElement/ns4:numberOfBAtch"/>
+                <to variable="hinum"/>
+            </copy>
+        </assign>
+        <while name="While_1"
+               condition="number(bpws:getVariableData('lownum')) &lt;= number(bpws:getVariableData('totalRow'))">
+            <sequence>
+                <assign name="a_collEquity">
+                    <copy>
+                        <from variable="hinum"/>
+                        <to variable="collEquity_Query_COLLEQUITY_InputVariable"
+                            part="Query_COLLEQUITYInput_msg"
+                            query="/ns5:Query_COLLEQUITYInput/ns5:hinum"/>
+                    </copy>
+                    <copy>
+                        <from variable="lownum"/>
+                        <to variable="collEquity_Query_COLLEQUITY_InputVariable"
+                            part="Query_COLLEQUITYInput_msg"
+                            query="/ns5:Query_COLLEQUITYInput/ns5:lownum"/>
+                    </copy>
+                </assign>
+                <invoke name="collEquity"
+                        inputVariable="collEquity_Query_COLLEQUITY_InputVariable"
+                        outputVariable="collEquity_Query_COLLEQUITY_OutputVariable"
+                        partnerLink="Query_COLLEQUITY"
+                        portType="ns2:Query_COLLEQUITY_ptt"
+                        operation="Query_COLLEQUITY"/>
+                <assign name="collEquity">
+                    <bpelx:annotation>
+                        <bpelx:pattern>transformation</bpelx:pattern>
+                    </bpelx:annotation>
+                    <copy>
+                        <from expression="ora:doXSLTransformForDoc('xsl/merge_collEquity.xsl',bpws:getVariableData('temp_collEquity'),'collEquity_Query_COLLEQUITY_OutputVariable.Query_COLLEQUITYOutputCollection',bpws:getVariableData('collEquity_Query_COLLEQUITY_OutputVariable','Query_COLLEQUITYOutputCollection'))"/>
+                        <to variable="temp_collEquity"/>
+                    </copy>
+                </assign>
+                <assign name="counter">
+                    <copy>
+                        <from expression="number(bpws:getVariableData('hinum')) + 1"/>
+                        <to variable="lownum"/>
+                    </copy>
+                    <copy>
+                        <from expression="number(bpws:getVariableData('hinum')) + number(bpws:getVariableData('inputVariable','payload','/ns4:TriggerElement/ns4:numberOfBAtch'))"/>
+                        <to variable="hinum"/>
+                    </copy>
+                </assign>
+            </sequence>
+        </while>
+        <assign name="output">
+            <copy>
+                <from variable="temp_collEquity"
+                      query="/ns5:Query_COLLEQUITYOutputCollection"/>
+                <to variable="outputVariable" part="payload"
+                    query="/ns5:Query_COLLEQUITYOutputCollection"/>
+            </copy>
+        </assign>
+        <invoke name="callbackClient" partnerLink="collcashequity_client" portType="client:CollCashEquityCallback" operation="processResponse" inputVariable="outputVariable"/>
+    </sequence>
+</process>

@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<adapter-config name="Write-Collateral" adapter="File Adapter" wsdlLocation="Write_Collateral.wsdl" xmlns="http://platform.integration.oracle/blocks/adapter/fw/metadata">
+   <connection-factory location="eis/FileAdapter" adapterRef=""/>
+   <endpoint-interaction portType="Write_Collateral_to_local_ptt" operation="Write-Collateral-to-local">
+      <interaction-spec className="oracle.tip.adapter.file.outbound.FileInteractionSpec">
+         <property name="PhysicalDirectory" value="c:\"/>
+         <property name="FileNamingConvention" value="change_on_the_fly"/>
+         <property name="Append" value="false"/>
+         <property name="NumberMessages" value="1"/>
+      </interaction-spec>
+   </endpoint-interaction>
+</adapter-config>

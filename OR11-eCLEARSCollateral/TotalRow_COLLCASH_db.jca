@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<adapter-config name="TotalRow_COLLCASH" adapter="Database Adapter" wsdlLocation="TotalRow_COLLCASH.wsdl" xmlns="http://platform.integration.oracle/blocks/adapter/fw/metadata">
+   <connection-factory location="eis/DB/ds_eclears" UIConnectionName="ds_eclears" adapterRef=""/>
+   <endpoint-interaction portType="TotalRow_COLLCASH_ptt" operation="TotalRow_COLLCASH">
+      <interaction-spec className="oracle.tip.adapter.db.DBPureSQLInteractionSpec">
+         <property name="SqlString" value="select count(mem.id_mem_capco) id_mem_capco from atlanta.members mem, atlanta.instrument_codes ic, atlanta.accounts acc, atlanta.balances bal where acc.id_acct_capco = bal.acct_id_acct_capco and ic.ins_id_ins_capco = bal.ins_id_ins_capco and code_ic in ('IDR', 'USD') and mem.id_mem_capco = acc.mem_id_mem_capco and typ_acct = 4 and typ_blnc = 1 and amt_blnc &lt;> 0"/>
+         <property name="GetActiveUnitOfWork" value="false"/>
+      </interaction-spec>
+      <input/>
+      <output/>
+   </endpoint-interaction>
+</adapter-config>

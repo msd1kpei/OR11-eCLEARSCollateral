@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ns2:kpeiInbound xmlns:ns2="http://www.kpei.co.id/razor/e-CLEARSCollateral" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kpei.co.id/razor/e-CLEARSCollateral file:/C:/WORK/DEVELOPMENT/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/xsd/e-CLEARSCollateral-response.xsd">
+   <ns2:body/>
+</ns2:kpeiInbound>

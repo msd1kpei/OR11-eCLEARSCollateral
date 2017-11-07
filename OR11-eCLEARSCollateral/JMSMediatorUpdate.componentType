@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<componentType xmlns="http://xmlns.oracle.com/sca/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ui="http://xmlns.oracle.com/soa/designer/">
+   <service name="JMSMediatorUpdate" ui:wsdlLocation="OR16_eCLEARSCollateral_JMS.wsdl">
+      <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/OR16_eCLEARSCollateral_JMS#wsdl.interface(eCLEARSCollateral_consume_ptt)"/>
+   </service>
+   <reference name="eCLEARSCollateralUpdate_response" ui:wsdlLocation="eCLEARSCollateralUpdate_response.wsdl">
+      <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/eCLEARSCollateralUpdate_response#wsdl.interface(eCLEARSCollateralUpdateProduce_ptt)"/>
+   </reference>
+   <reference name="CollateralProcessingBPEL.OR11-eCLEARSCollateral" ui:wsdlLocation="OR11_eCLEARSCollateralRef.wsdl">
+      <interface.wsdl interface="http://oracle.com/sca/soapservice/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/OR11_eCLEARSCollateral#wsdl.interface(execute_ptt)"/>
+   </reference>
+</componentType>

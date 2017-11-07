@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<COLLCASHOutputCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.oracle.com/pcbpel/adapter/db/COLLCASH file:/C:/WORK/DEVELOPMENT/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/xsd/Query_COLLCASH.xsd" xmlns="http://xmlns.oracle.com/pcbpel/adapter/db/COLLCASH">
+   <COLLCASHOutput/>
+</COLLCASHOutputCollection>

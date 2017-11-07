@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Mediator name="JMsMediator" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.oracle.com/sca/1.0/mediator" wsdlTargetNamespace="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/JMSTrigger" xmlns:xpath20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20" xmlns:imp1="http://www.kpei.co.id/razor/trigger/e-CLEARSCollateral" xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc">
+   <operation name="Consume_Message_JMSMessage" deliveryPolicy="AllOrNothing" priority="4" validateSchema="false">
+      <switch>
+         <case executionType="direct" name="ColCashHelper.colcashhelper_client.process">
+            <condition language="xpath">
+               <expression>contains(xpath20:lower-case(string($in.body/imp1:TriggerElement/imp1:messageType)),'collcash')</expression>
+            </condition>
+            <action>
+               <transform>
+                  <part name="$out.payload" function="xslt(xsl/collCash_Helper_TriggerElement.xsl, $in.body)"/>
+               </transform>
+               <invoke reference="ColCashHelper.colcashhelper_client" operation="process"/>
+            </action>
+         </case>
+         <case executionType="direct" name="CollEquityHelper.collequityhelper_client.process">
+            <condition language="xpath">
+               <expression>contains(xpath20:lower-case(string($in.body/imp1:TriggerElement/imp1:messageType)),'colleq')</expression>
+            </condition>
+            <action>
+               <transform>
+                  <part name="$out.payload" function="xslt(xsl/CollEquity_To_TriggerElement.xsl, $in.body)"/>
+               </transform>
+               <assign/>
+               <invoke reference="CollEquityHelper.collequityhelper_client" operation="process"/>
+            </action>
+         </case>
+      </switch>
+   </operation>
+</Mediator>

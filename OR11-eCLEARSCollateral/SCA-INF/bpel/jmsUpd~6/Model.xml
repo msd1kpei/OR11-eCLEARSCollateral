@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process name="jmsUpdate_bpel" targetNamespace="http://xmlns.oracle.com/kpeisoa/OR11_eCLEARSCollateral/jmsUpdate_bpel" xmlns="http://schemas.xmlsoap.org/ws/2003/03/business-process/" xmlns:client="http://xmlns.oracle.com/kpeisoa/OR11_eCLEARSCollateral/jmsUpdate_bpel" xmlns:ora="http://schemas.oracle.com/xpath/extension" xmlns:bpelx="http://schemas.oracle.com/bpel/extension" xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/OR16_eCLEARSCollateral_JMS" xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/" xmlns:ns2="http://oracle.com/sca/soapservice/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/OR11_eCLEARSCollateral" xmlns:ns3="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/eCLEARSCollateralUpdate_response" xmlns:ns4="http://www.kpei.co.id/schema/OnlineCollateral.001" xmlns:bpel2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:ns5="http://kpei.co.id/MDwsReply.xsd" id="BpPrc0">
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      PARTNERLINKS                                                      
+      List of services participating in this BPEL process               
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  --> 
+  <partnerLinks>
+    <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+    <partnerLink name="jmsupdate_bpel_client" partnerLinkType="ns1:eCLEARSCollateral_consume_plt" myRole="eCLEARSCollateral_consume_role"/>
+    <partnerLink name="CollateralProcessingBPEL.OR11-eCLEARSCollateral" partnerLinkType="ns2:OR11-eCLEARSCollateral" partnerRole="execute_ptt"/>
+    <partnerLink name="eCLEARSCollateralUpdate_response" partnerLinkType="ns3:eCLEARSCollateralUpdateProduce_plt" partnerRole="eCLEARSCollateralUpdateProduce_role"/>
+  </partnerLinks>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      VARIABLES                                                        
+      List of messages and XML documents used within this BPEL process 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <variables>
+    <!-- Reference to the message passed as input during initiation -->
+    <variable name="inputVariable" messageType="ns1:eCLEARSCollateral_consume_msg"/>
+    <variable name="processRequest" messageType="ns2:requestMessage"/>
+    <variable name="processReply" messageType="ns2:replyMessage"/>
+    <variable name="outputVariable" messageType="ns3:eCLEARSCollateralUpdateProduce_msg"/>
+  </variables>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ORCHESTRATION LOGIC                                               
+     Set of activities coordinating the flow of messages across the    
+     services integrated within this business process                  
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <sequence name="main" id="BpSeq0">
+
+    <!-- Receive input from requestor. (Note: This maps to operation defined in jmsUpdate_bpel.wsdl) -->
+    <receive name="receiveInput" partnerLink="jmsupdate_bpel_client" portType="ns1:eCLEARSCollateral_consume_ptt" operation="eCLEARSCollateral_consume" variable="inputVariable" createInstance="yes" id="BpRcv0"/>
+    <assign name="as_process" bpelx:skipCondition="1=1" id="BpAss0">
+      <copy>
+        <from variable="inputVariable" part="body" query="/ns4:Collateral"/>
+        <to variable="processRequest" part="request" query="/ns4:Collateral"/>
+      </copy>
+    </assign>
+    <assign name="as_process_transform" id="BpAss1">
+      <bpelx:annotation>
+        <bpelx:pattern>transformation</bpelx:pattern>
+      </bpelx:annotation>
+      <copy>
+        <from expression="ora:processXSLT('xsl/as_process_transform.xsl',bpws:getVariableData('inputVariable','body'))"/>
+        <to variable="processRequest" part="request"/>
+      </copy>
+    </assign>
+    <invoke name="inv_process" bpelx:invokeAsDetail="no" inputVariable="processRequest" outputVariable="processReply" partnerLink="CollateralProcessingBPEL.OR11-eCLEARSCollateral" portType="ns2:execute_ptt" operation="sendCollateral" id="BpInv0"/>
+    <assign name="as_reply" id="BpAss2">
+      <copy>
+        <from variable="processReply" part="reply" query="/ns5:wsReply"/>
+        <to variable="outputVariable" part="body" query="/ns5:wsReply"/>
+      </copy>
+    </assign>
+    <invoke name="inv_reply" bpelx:invokeAsDetail="no" inputVariable="outputVariable" partnerLink="eCLEARSCollateralUpdate_response" portType="ns3:eCLEARSCollateralUpdateProduce_ptt" operation="eCLEARSCollateralUpdateProduce" id="BpInv1"/>
+  </sequence>
+</process><!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Thu Aug 04 14:34:36 ICT 2011
+  Author:  adam
+  Purpose: Synchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
