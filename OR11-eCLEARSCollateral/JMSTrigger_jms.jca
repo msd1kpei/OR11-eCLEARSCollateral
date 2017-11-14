@@ -1,5 +1,5 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<adapter-config name="JMSTrigger" adapter="Jms Adapter" wsdlLocation="JMSTrigger.wsdl" xmlns="http://platform.integration.oracle/blocks/adapter/fw/metadata">
+<?xml version="1.0" encoding="UTF-8"?>
+<adapter-config name="JMSTrigger" adapter="jms" wsdlLocation="JMSTrigger.wsdl" xmlns="http://platform.integration.oracle/blocks/adapter/fw/metadata">
    <connection-factory location="eis/wls/Queue" UIConnectionName="soadev-kpei" UIJmsProvider="WLSJMS" adapterRef=""/>
    <endpoint-activation portType="Consume_Message_JMSMessage_ptt" operation="Consume_Message_JMSMessage">
       <activation-spec className="oracle.tip.adapter.jms.inbound.JmsConsumeActivationSpec">

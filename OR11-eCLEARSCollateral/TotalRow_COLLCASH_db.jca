@@ -1,5 +1,5 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<adapter-config name="TotalRow_COLLCASH" adapter="Database Adapter" wsdlLocation="TotalRow_COLLCASH.wsdl" xmlns="http://platform.integration.oracle/blocks/adapter/fw/metadata">
+<?xml version="1.0" encoding="UTF-8"?>
+<adapter-config name="TotalRow_COLLCASH" adapter="db" wsdlLocation="TotalRow_COLLCASH.wsdl" xmlns="http://platform.integration.oracle/blocks/adapter/fw/metadata">
    <connection-factory location="eis/DB/ds_eclears" UIConnectionName="ds_eclears" adapterRef=""/>
    <endpoint-interaction portType="TotalRow_COLLCASH_ptt" operation="TotalRow_COLLCASH">
       <interaction-spec className="oracle.tip.adapter.db.DBPureSQLInteractionSpec">

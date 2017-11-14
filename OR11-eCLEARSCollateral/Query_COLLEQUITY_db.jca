@@ -1,5 +1,5 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<adapter-config name="Query_COLLEQUITY" adapter="Database Adapter" wsdlLocation="Query_COLLEQUITY.wsdl" xmlns="http://platform.integration.oracle/blocks/adapter/fw/metadata">
+<?xml version="1.0" encoding="UTF-8"?>
+<adapter-config name="Query_COLLEQUITY" adapter="db" wsdlLocation="Query_COLLEQUITY.wsdl" xmlns="http://platform.integration.oracle/blocks/adapter/fw/metadata">
    <connection-factory location="eis/DB/ds_eclears" UIConnectionName="ds_eclears" adapterRef=""/>
    <endpoint-interaction portType="Query_COLLEQUITY_ptt" operation="Query_COLLEQUITY">
       <interaction-spec className="oracle.tip.adapter.db.DBPureSQLInteractionSpec">

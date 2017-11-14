@@ -37,36 +37,148 @@
    </service>
    <property name="auditLevel" many="false">Development</property>
    <property name="validateSchema" type="xs:boolean" many="false">false</property>
+   <property name="originalProductVersion" type="xs:string" many="false">11.0.0.0.0</property>
+   <property name="productVersion" type="xs:string" many="false">12.2.1.3.0.170820</property>
+   <property name="compositeID" type="xs:string" many="false">62bcbf95-7bf7-460f-8826-68a4b6c5143b</property>
    <component name="JMsMediator">
       <implementation.mediator src="JMsMediator.mplan"/>
+      <componentType xmlns="http://xmlns.oracle.com/sca/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                     xmlns:ui="http://xmlns.oracle.com/soa/designer/">
+         <service name="JMsMediator" ui:wsdlLocation="JMSTrigger.wsdl">
+            <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/JMSTrigger#wsdl.interface(Consume_Message_JMSMessage_ptt)"/>
+         </service>
+         <reference name="ColCashHelper.colcashhelper_client" ui:wsdlLocation="ColCashHelper.wsdl">
+            <interface.wsdl interface="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/ColCashHelper#wsdl.interface(ColCashHelper)"/>
+         </reference>
+         <reference name="CollEquityHelper.collequityhelper_client" ui:wsdlLocation="CollEquityHelper.wsdl">
+            <interface.wsdl interface="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollEquityHelper#wsdl.interface(CollEquityHelper)"/>
+         </reference>
+      </componentType>
       <property name="isResequencing" many="false" override="may">false</property>
       <business-events/>
    </component>
    <component name="CollCashEquity">
       <implementation.bpel src="CollCashEquity.bpel"/>
+      <componentType xmlns="http://xmlns.oracle.com/sca/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                     xmlns:ui="http://xmlns.oracle.com/soa/designer/">
+         <service name="collcashequity_client" ui:wsdlLocation="CollCashEquity.wsdl">
+            <interface.wsdl interface="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashEquity#wsdl.interface(CollCashEquity)"
+                            callbackInterface="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashEquity#wsdl.interface(CollCashEquityCallback)"/>
+         </service>
+         <reference name="Rownum_CollEquity" ui:wsdlLocation="Rownum_CollEquity.wsdl">
+            <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Rownum_CollEquity#wsdl.interface(Rownum_CollEquity_ptt)"/>
+         </reference>
+         <reference name="Query_COLLEQUITY" ui:wsdlLocation="Query_COLLEQUITY.wsdl">
+            <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Query_COLLEQUITY#wsdl.interface(Query_COLLEQUITY_ptt)"/>
+         </reference>
+      </componentType>
       <business-events/>
    </component>
    <component name="ColCashHelper">
       <implementation.bpel src="ColCashHelper.bpel"/>
+      <componentType xmlns="http://xmlns.oracle.com/sca/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                     xmlns:ui="http://xmlns.oracle.com/soa/designer/">
+         <service name="colcashhelper_client" ui:wsdlLocation="ColCashHelper.wsdl">
+            <interface.wsdl interface="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/ColCashHelper#wsdl.interface(ColCashHelper)"/>
+         </service>
+         <reference name="CollCashBPEL.collcashbpel_client" ui:wsdlLocation="CollCashBPEL.wsdl">
+            <interface.wsdl interface="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashBPEL#wsdl.interface(CollCashBPEL)"
+                            callbackInterface="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashBPEL#wsdl.interface(CollCashBPELCallback)"/>
+         </reference>
+         <reference name="CollateralProcessingBPEL.OR11-eCLEARSCollateral"
+                    ui:wsdlLocation="OR11_eCLEARSCollateralRef.wsdl">
+            <interface.wsdl interface="http://oracle.com/sca/soapservice/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/OR11_eCLEARSCollateral#wsdl.interface(execute_ptt)"/>
+         </reference>
+         <reference name="JMSReply" ui:wsdlLocation="JMSReply.wsdl">
+            <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/JMSReply#wsdl.interface(Produce_eCLEARSCollateralQueue_ptt)"/>
+         </reference>
+      </componentType>
       <business-events/>
    </component>
    <component name="CollEquityHelper">
       <implementation.bpel src="CollEquityHelper.bpel"/>
+      <componentType xmlns="http://xmlns.oracle.com/sca/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                     xmlns:ui="http://xmlns.oracle.com/soa/designer/">
+         <service name="collequityhelper_client" ui:wsdlLocation="CollEquityHelper.wsdl">
+            <interface.wsdl interface="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollEquityHelper#wsdl.interface(CollEquityHelper)"/>
+         </service>
+         <reference name="CollCashEquity.collcashequity_client" ui:wsdlLocation="CollCashEquity.wsdl">
+            <interface.wsdl interface="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashEquity#wsdl.interface(CollCashEquity)"
+                            callbackInterface="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashEquity#wsdl.interface(CollCashEquityCallback)"/>
+         </reference>
+         <reference name="CollateralProcessingBPEL.OR11-eCLEARSCollateral"
+                    ui:wsdlLocation="OR11_eCLEARSCollateralRef.wsdl">
+            <interface.wsdl interface="http://oracle.com/sca/soapservice/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/OR11_eCLEARSCollateral#wsdl.interface(execute_ptt)"/>
+         </reference>
+         <reference name="JMSReply" ui:wsdlLocation="JMSReply.wsdl">
+            <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/JMSReply#wsdl.interface(Produce_eCLEARSCollateralQueue_ptt)"/>
+         </reference>
+      </componentType>
       <business-events/>
    </component>
    <component name="CollCashBPEL">
       <implementation.bpel src="CollCashBPEL.bpel"/>
+      <componentType xmlns="http://xmlns.oracle.com/sca/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                     xmlns:ui="http://xmlns.oracle.com/soa/designer/">
+         <service name="collcashbpel_client" ui:wsdlLocation="CollCashBPEL.wsdl">
+            <interface.wsdl interface="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashBPEL#wsdl.interface(CollCashBPEL)"
+                            callbackInterface="http://xmlns.oracle.com/ARIS_KPEI_PROJECT_jws/OR11_eCLEARSCollateral/CollCashBPEL#wsdl.interface(CollCashBPELCallback)"/>
+         </service>
+         <reference name="TotalRow_COLLCASH" ui:wsdlLocation="TotalRow_COLLCASH.wsdl">
+            <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/TotalRow_COLLCASH#wsdl.interface(TotalRow_COLLCASH_ptt)"/>
+         </reference>
+         <reference name="Query_COLLCASH" ui:wsdlLocation="Query_COLLCASH.wsdl">
+            <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/db/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Query_COLLCASH#wsdl.interface(Query_COLLCASH_ptt)"/>
+         </reference>
+      </componentType>
       <business-events/>
    </component>
    <component name="CollateralProcessingBPEL">
       <implementation.bpel src="CollateralProcessingBPEL.bpel"/>
+      <componentType xmlns="http://xmlns.oracle.com/sca/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                     xmlns:ui="http://xmlns.oracle.com/soa/designer/">
+         <service name="OR11-eCLEARSCollateral" ui:wsdlLocation="OR11_eCLEARSCollateralRef.wsdl">
+            <interface.wsdl interface="http://oracle.com/sca/soapservice/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/OR11_eCLEARSCollateral#wsdl.interface(execute_ptt)"/>
+         </service>
+         <reference name="GE03-XMLUtility" ui:wsdlLocation="GE03-XMLUtilityRef.wsdl">
+            <interface.wsdl interface="http://oracle.com/sca/soapservice/kpei/GE03-XMLUtility/GE03_XMLUtility#wsdl.interface(GE03-XMLUtility)"/>
+         </reference>
+         <reference name="GE02-FileUtility" ui:wsdlLocation="GE02-FileUtility.wsdl">
+            <interface.wsdl interface="http://www.kpei.co.id/GE02-FileUtility#wsdl.interface(GE02-FileUtility)"/>
+         </reference>
+         <reference name="Write-Collateral" ui:wsdlLocation="Write_Collateral.wsdl">
+            <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/file/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Write_Collateral#wsdl.interface(Write_Collateral_to_local_ptt)"/>
+         </reference>
+      </componentType>
       <business-events/>
    </component>
    <component name="RouteCollateralQueue">
       <implementation.mediator src="RouteCollateralQueue.mplan"/>
+      <componentType xmlns="http://xmlns.oracle.com/sca/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                     xmlns:ui="http://xmlns.oracle.com/soa/designer/">
+         <service name="RouteCollateralQueue" ui:wsdlLocation="Inbound_CollateralQueue.wsdl">
+            <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/jms/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Inbound_CollateralQueue#wsdl.interface(Consume_Message_ptt)"/>
+         </service>
+         <reference name="PrepareCollateralAck.preparecollateralack_client" ui:wsdlLocation="PrepareCollateralAck.wsdl">
+            <interface.wsdl interface="http://xmlns.oracle.com/ARIS_KPEI_PROJECT/OR11_eCLEARSCollateral/PrepareCollateralAck#wsdl.interface(PrepareCollateralAck)"/>
+         </reference>
+         <reference name="ResponseMessageSender" ui:wsdlLocation="Outbound.wsdl">
+            <interface.wsdl interface="http://xmlns.oracle.com/MW-OSB/sendResponeMsg/sendResponsemsg#wsdl.interface(sendResponsemsg_ptt)"/>
+         </reference>
+      </componentType>
    </component>
    <component name="PrepareCollateralAck" version="1.1">
       <implementation.bpel src="PrepareCollateralAck.bpel"/>
+      <componentType xmlns="http://xmlns.oracle.com/sca/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                     xmlns:ui="http://xmlns.oracle.com/soa/designer/">
+         <service name="preparecollateralack_client" ui:wsdlLocation="PrepareCollateralAck.wsdl">
+            <interface.wsdl interface="http://xmlns.oracle.com/ARIS_KPEI_PROJECT/OR11_eCLEARSCollateral/PrepareCollateralAck#wsdl.interface(PrepareCollateralAck)"/>
+         </service>
+         <reference name="CollateralProcessingBPEL.OR11-eCLEARSCollateral"
+                    ui:wsdlLocation="OR11_eCLEARSCollateralRef.wsdl">
+            <interface.wsdl interface="http://oracle.com/sca/soapservice/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/OR11_eCLEARSCollateral#wsdl.interface(execute_ptt)"/>
+         </reference>
+      </componentType>
    </component>
    <reference name="Write-Collateral">
       <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/file/ARIS-KPEI-PROJECT/OR11-eCLEARSCollateral/Write_Collateral#wsdl.interface(Write_Collateral_to_local_ptt)"/>

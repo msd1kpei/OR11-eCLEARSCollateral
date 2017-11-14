@@ -1,5 +1,5 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<adapter-config name="Rownum_CollEquity" adapter="Database Adapter" wsdlLocation="Rownum_CollEquity.wsdl" xmlns="http://platform.integration.oracle/blocks/adapter/fw/metadata">
+<?xml version="1.0" encoding="UTF-8"?>
+<adapter-config name="Rownum_CollEquity" adapter="db" wsdlLocation="Rownum_CollEquity.wsdl" xmlns="http://platform.integration.oracle/blocks/adapter/fw/metadata">
    <connection-factory location="eis/DB/ds_eclears" UIConnectionName="ds_eclears" adapterRef=""/>
    <endpoint-interaction portType="Rownum_CollEquity_ptt" operation="Rownum_CollEquity">
       <interaction-spec className="oracle.tip.adapter.db.DBPureSQLInteractionSpec">
